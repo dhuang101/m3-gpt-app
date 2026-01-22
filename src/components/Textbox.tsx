@@ -1,7 +1,7 @@
 interface PropsType {
-	handleKeyDown: any
-	input: any
-	setInput: any
+	handleKeyDown: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void
+	input: string
+	setInput: React.Dispatch<React.SetStateAction<string>>
 }
 
 function TextBox({ handleKeyDown, input, setInput }: PropsType) {
