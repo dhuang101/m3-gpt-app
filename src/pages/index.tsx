@@ -56,6 +56,11 @@ export default function Home() {
 								)
 							}
 						})}
+						{loading && (
+							<div className="bg-base-200 w-fit p-4 my-4 mr-8 rounded-b-3xl rounded-tr-3xl">
+								<span className="loading loading-dots loading-xl"></span>
+							</div>
+						)}
 					</div>
 					<TextBox
 						handleKeyDown={handleKeyDown}
