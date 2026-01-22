@@ -3,7 +3,7 @@ import ollama from "ollama"
 
 async function ChatToBioMedGPT(params: any) {
 	return await ollama.chat({
-		model: "biomed-fixed",
+		model: "biomedgpt",
 		messages: [{ role: "user", content: params.message }],
 		stream: false,
 	})
