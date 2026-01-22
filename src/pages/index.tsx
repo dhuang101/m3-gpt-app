@@ -5,13 +5,12 @@ import { useState } from "react"
 
 export default function Home() {
 	const [input, setInput] = useState("")
-	const [response, setResponse] = useState("")
 	const [loading, setLoading] = useState(false)
-	const [prevText, setPrevText] = useState<string[]>(["test", "123"])
+	const [prevText, setPrevText] = useState<string[]>([])
 
 	function handleKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
-		console.log(prevText.length)
 		if (event.key === "Enter" && !event.shiftKey && input !== "") {
+			event.preventDefault()
 			setPrevText([...prevText, input])
 			setLoading(true)
 			axios
@@ -19,7 +18,7 @@ export default function Home() {
 					message: input,
 				})
 				.then((response) => {
-					setResponse(response.data.message.content)
+					setPrevText([...prevText, response.data.message.content])
 					setLoading(false)
 				})
 		}
@@ -30,7 +29,24 @@ export default function Home() {
 			{prevText.length > 0 ? (
 				<div className="flex flex-col items-center justify-center h-full w-1/2">
 					<div className="flex flex-col h-4/5 w-full overflow-y-auto p-8">
-						{}
+						{prevText.map((text, i) => {
+							if (i % 2 === 0) {
+								return (
+									<div
+										key={i}
+										className="bg-base-200 w-fit p-4 ml-auto rounded-b-xl rounded-tl-xl"
+									>
+										{text}
+									</div>
+								)
+							} else if (i % 2 === 1) {
+								return (
+									<div key={i} className="mt-2 mr-8">
+										{text}
+									</div>
+								)
+							}
+						})}
 					</div>
 					<TextBox
 						handleKeyDown={handleKeyDown}
