@@ -6,21 +6,27 @@ import { useState } from "react"
 export default function Home() {
 	const [input, setInput] = useState("")
 	const [loading, setLoading] = useState(false)
-	const [prevText, setPrevText] = useState<string[]>([])
+	const [prevText, setPrevText] = useState<string[]>(["input", "response"])
 
 	function handleKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
-		if (event.key === "Enter" && !event.shiftKey && input !== "") {
+		if (event.key === "Enter" && !event.shiftKey && input.trim() !== "") {
 			event.preventDefault()
-			setPrevText([...prevText, input])
+			setPrevText((prev) => [...prev, input])
 			setLoading(true)
 			axios
 				.post("/api/chatToBioMedGPT", {
 					message: input,
 				})
 				.then((response) => {
-					setPrevText([...prevText, response.data.message.content])
+					const newResponse = response.data.message.content
+					setPrevText((prev) => [...prev, newResponse])
 					setLoading(false)
 				})
+				.catch((error) => {
+					console.error("Error fetching response:", error)
+					setLoading(false)
+				})
+			setInput("")
 		}
 	}
 
@@ -41,7 +47,7 @@ export default function Home() {
 								)
 							} else if (i % 2 === 1) {
 								return (
-									<div key={i} className="mt-2 mr-8">
+									<div key={i} className="my-4 mr-8">
 										{text}
 									</div>
 								)
@@ -50,6 +56,7 @@ export default function Home() {
 					</div>
 					<TextBox
 						handleKeyDown={handleKeyDown}
+						input={input}
 						setInput={setInput}
 					/>
 				</div>
@@ -57,6 +64,7 @@ export default function Home() {
 				<div className="flex items-center justify-center w-1/2">
 					<TextBox
 						handleKeyDown={handleKeyDown}
+						input={input}
 						setInput={setInput}
 					/>
 				</div>
