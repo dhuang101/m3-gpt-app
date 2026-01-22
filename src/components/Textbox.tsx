@@ -1,9 +1,10 @@
 interface PropsType {
 	handleKeyDown: any
+	input: any
 	setInput: any
 }
 
-function TextBox({ handleKeyDown, setInput }: PropsType) {
+function TextBox({ handleKeyDown, input, setInput }: PropsType) {
 	function handleInput(event: React.ChangeEvent<HTMLTextAreaElement>) {
 		const element = event.target
 		element.style.height = "auto"
@@ -16,6 +17,7 @@ function TextBox({ handleKeyDown, setInput }: PropsType) {
 			<textarea
 				placeholder="Ask BioMedGPT"
 				className="textarea textarea-ghost focus:outline-none focus:bg-transparent border-none w-full min-h-12 overflow-hidden text-base-content placeholder:text-base-content/50 px-2 text-lg resize-none leading-7 max-h-53 overflow-y-auto"
+				value={input}
 				onKeyDown={handleKeyDown}
 				onChange={handleInput}
 				rows={1}
@@ -37,7 +39,6 @@ function TextBox({ handleKeyDown, setInput }: PropsType) {
 						/>
 					</svg>
 				</button>
-
 				<div className="flex">
 					<button className="btn btn-ghost btn-circle btn-sm">
 						<svg
@@ -55,7 +56,6 @@ function TextBox({ handleKeyDown, setInput }: PropsType) {
 							/>
 						</svg>
 					</button>
-
 					<button className="btn btn-ghost btn-circle btn-sm">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
