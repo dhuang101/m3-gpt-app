@@ -36,7 +36,7 @@ jobs:
                       screen -S webserver -X quit || echo "No existing screen session"
 
                       # Pull latest changes securely using the PAT
-                      git pull https://${{ secrets.PIPELINE_PAT }}@github.com/dhuang101/m3-gpt-app.git develop
+                      git pull https://${{ secrets.PIPELINE_PAT }}@github.com/dhuang101/m3-gpt-app.git main
 
                       # Install dependencies
                       npm install
