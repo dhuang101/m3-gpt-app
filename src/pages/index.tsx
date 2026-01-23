@@ -40,7 +40,7 @@ export default function Home() {
 	return (
 		<div className="flex flex-col items-center justify-center w-full h-screen bg-base-100">
 			{messages.length > 0 ? (
-				<div className="flex flex-col items-center justify-center h-full w-1/2">
+				<div className="flex flex-col items-center justify-center h-full w-2/5">
 					<div className="flex flex-col h-4/5 w-full overflow-y-auto p-8">
 						{messages.map((message, i) => {
 							if (i % 2 === 0) {
