@@ -1,0 +1,50 @@
+name: Manual Deploy to VM
+
+on:
+    workflow_dispatch: # Only runs manually
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: SSH into VM and deploy app
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                  host: ${{ secrets.VM_HOST }}
+                  username: ${{ secrets.VM_USER }}
+                  key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  port: 22
+                  script: |
+                      set -e
+                      echo "Connecting to VM..."
+
+                      # Ensure npm and node are available
+                      export NVM_DIR="$HOME/.nvm"
+                      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                      [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+                      source ~/.bashrc
+                      source ~/.profile
+
+                      # Navigate to project directory
+                      cd /home/ubuntu/m3-gpt-app/
+
+                      # Kill existing process in screen session
+                      screen -S webserver -X quit || echo "No existing screen session"
+
+                      # Pull latest changes securely using the PAT
+                      git pull https://${{ secrets.PIPELINE_PAT }}@github.com/dhuang101/m3-gpt-app.git develop
+
+                      # Install dependencies
+                      npm install
+
+                      # Build the app
+                      npm run build
+
+                      # Start the app inside a new screen session
+                      screen -dmS webserver bash -c 'npm start'
+
+                      echo "Deployment completed successfully!"
