@@ -47,7 +47,7 @@ export default function Home() {
 		<div className="flex flex-col items-center justify-center w-full h-screen bg-base-100">
 			{messages.length > 0 ? (
 				<div className="flex flex-col items-center justify-center h-full w-2/5">
-					<div className="flex w-full mb-4">
+					<div className="flex w-full my-4">
 						<button
 							onClick={resetConversation}
 							className="btn btn-outline rounded-full border-base-300 text-base-content hover:bg-error hover:text-white transition-all"
@@ -69,7 +69,7 @@ export default function Home() {
 							New Chat
 						</button>
 					</div>
-					<div className="flex flex-col h-4/5 w-full overflow-y-auto p-8">
+					<div className="flex flex-col h-4/5 w-full overflow-y-auto p-8 mb-4">
 						{messages.map((message, i) => {
 							if (i % 2 === 0) {
 								return (
@@ -102,7 +102,7 @@ export default function Home() {
 						input={input}
 						setInput={setInput}
 					/>
-					<article className="mt-4 text-sm text-base-300">
+					<article className="my-2 text-sm text-base-300">
 						disclaimer area
 					</article>
 				</div>
