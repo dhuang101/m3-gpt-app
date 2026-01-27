@@ -9,10 +9,14 @@ interface ChatMessage {
 	content: string
 }
 
+type AvailableModels = "BioMedGPT" | "MedVLM"
+
 export default function Home() {
+	const [selectedModel, setSelectedModel] =
+		useState<AvailableModels>("BioMedGPT")
 	const [input, setInput] = useState("")
-	const [loading, setLoading] = useState(false)
 	const [messages, setMessages] = useState<ChatMessage[]>([])
+	const [loading, setLoading] = useState(false)
 
 	function resetConversation() {
 		setMessages([])
@@ -104,9 +108,11 @@ export default function Home() {
 						handleKeyDown={handleKeyDown}
 						input={input}
 						setInput={setInput}
+						selectedModel={selectedModel}
+						setSelectedModel={setSelectedModel}
 					/>
 					<article className="my-2 text-sm text-base-300">
-						disclaimer area
+						LLMs can make mistakes, so double-check it
 					</article>
 				</div>
 			) : (
@@ -115,6 +121,8 @@ export default function Home() {
 						handleKeyDown={handleKeyDown}
 						input={input}
 						setInput={setInput}
+						selectedModel={selectedModel}
+						setSelectedModel={setSelectedModel}
 					/>
 				</div>
 			)}
