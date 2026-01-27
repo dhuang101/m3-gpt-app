@@ -1,3 +1,4 @@
+import { ChatResponse } from "@/components/ChatResponse"
 import TextBox from "@/components/Textbox"
 import axios from "axios"
 import React from "react"
@@ -33,6 +34,8 @@ export default function Home() {
 				})
 				.then((response) => {
 					const newResponse = response.data
+						.replace(/\[\/?INST\]/g, "")
+						.trim()
 					setMessages((prev) => [...prev, newResponse])
 					setLoading(false)
 				})
@@ -86,7 +89,9 @@ export default function Home() {
 										key={i}
 										className="bg-base-200 w-fit p-4 my-4 mr-8 rounded-b-3xl rounded-tr-3xl"
 									>
-										{message.content}
+										<ChatResponse
+											content={message.content}
+										/>
 									</div>
 								)
 							}

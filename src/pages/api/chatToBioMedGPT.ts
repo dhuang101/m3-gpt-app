@@ -10,6 +10,9 @@ async function ChatToBioMedGPT(params: ParamsType) {
 		model: "biomedgpt",
 		messages: params.messages,
 		stream: false,
+		options: {
+			stop: ["[/INST]", "</s>", "[INST]"],
+		},
 	})
 }
 
