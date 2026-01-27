@@ -34,8 +34,6 @@ export default function Home() {
 				})
 				.then((response) => {
 					const newResponse = response.data
-						.replace(/\[\/?INST\]/g, "")
-						.trim()
 					setMessages((prev) => [...prev, newResponse])
 					setLoading(false)
 				})
