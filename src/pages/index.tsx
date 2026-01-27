@@ -9,7 +9,7 @@ interface ChatMessage {
 	content: string
 }
 
-type AvailableModels = "BioMedGPT" | "MedVLM"
+type AvailableModels = "BioMedGPT" | "Llama"
 
 export default function Home() {
 	const [selectedModel, setSelectedModel] =

@@ -2,9 +2,9 @@ interface PropsType {
 	handleKeyDown: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void
 	input: string
 	setInput: React.Dispatch<React.SetStateAction<string>>
-	selectedModel: "BioMedGPT" | "MedVLM"
+	selectedModel: "BioMedGPT" | "Llama"
 	setSelectedModel: React.Dispatch<
-		React.SetStateAction<"BioMedGPT" | "MedVLM">
+		React.SetStateAction<"BioMedGPT" | "Llama">
 	>
 }
 
@@ -23,7 +23,7 @@ function TextBox({
 	}
 
 	function handleSelectChange(event: React.ChangeEvent<HTMLSelectElement>) {
-		const value = event.target.value as "BioMedGPT" | "MedVLM"
+		const value = event.target.value as "BioMedGPT" | "Llama"
 		setSelectedModel(value)
 	}
 
@@ -66,7 +66,7 @@ function TextBox({
 						<option value="BioMedGPT">
 							BioMedGPT-LM-7B.Q4_K_M
 						</option>
-						<option value="MedVLM">MedVLM-R1.Q4_K_M</option>
+						<option value="Llama">Llama3.2-vision</option>
 					</select>
 				</div>
 			</div>
