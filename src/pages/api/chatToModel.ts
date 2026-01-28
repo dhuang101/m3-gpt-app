@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import ollama, { Message } from "ollama"
 
-type ModelType = "biomedgpt" | "medgemma"
+type ModelType = "BioMedGPT" | "MedGemma"
 
 interface ParamsType {
 	messages: (Message & { images?: string[] })[] // Extend message to allow images
@@ -10,15 +10,20 @@ interface ParamsType {
 
 async function ChatToModel(params: ParamsType) {
 	const modelMap: Record<ModelType, string> = {
-		biomedgpt: "biomedgpt",
-		medgemma: "medgemma-vision",
+		BioMedGPT: "biomedgpt",
+		MedGemma: "medgemma-vision",
 	}
 	const selectedModel = modelMap[params.model] || "biomedgpt"
+
+	if (!params.messages || params.messages.length === 0) {
+		throw new Error("No messages provided")
+	}
 
 	return await ollama.chat({
 		model: selectedModel,
 		messages: params.messages,
 		stream: false,
+		think: false,
 		options: {
 			stop: [
 				"[/INST]",
@@ -27,6 +32,7 @@ async function ChatToModel(params: ParamsType) {
 				"<end_of_turn>",
 				"<start_of_turn>",
 			],
+			num_ctx: selectedModel === "medgemma-vision" ? 4096 : 2048,
 		},
 	})
 }
