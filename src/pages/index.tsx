@@ -98,7 +98,7 @@ export default function Home() {
 								<div className="w-10 rounded-full">
 									<img
 										src={
-											session.user.image ||
+											session.user.picture ||
 											`https://ui-avatars.com/api/?name=${session.user.name}`
 										}
 										alt="profile"
@@ -109,9 +109,6 @@ export default function Home() {
 								tabIndex={0}
 								className="mt-4 p-2 shadow menu menu-sm dropdown-content bg-base-200 rounded-box w-52 border border-base-300"
 							>
-								<li>
-									<a>Settings</a>
-								</li>
 								<li>
 									<button
 										onClick={() => signOut()}
