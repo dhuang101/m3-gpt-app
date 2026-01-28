@@ -137,6 +137,7 @@ export default function Home() {
 							setSelectedImage(base64)
 						}}
 						clearImage={() => setSelectedImage(null)}
+						isChatting={true}
 					/>
 					<article className="my-2 text-sm text-base-300 italic text-center">
 						Medical LLMs can make mistakes. Always consult a
@@ -157,6 +158,7 @@ export default function Home() {
 							setSelectedImage(base64)
 						}}
 						clearImage={() => setSelectedImage(null)}
+						isChatting={false}
 					/>
 				</div>
 			)}

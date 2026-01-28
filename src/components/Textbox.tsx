@@ -11,6 +11,7 @@ interface PropsType {
 	selectedImage: string | null
 	onImageUpload: (file: File) => void
 	clearImage: () => void
+	isChatting: boolean
 }
 
 function TextBox({
@@ -22,6 +23,7 @@ function TextBox({
 	selectedImage,
 	onImageUpload,
 	clearImage,
+	isChatting,
 }: PropsType) {
 	const fileInputRef = useRef<HTMLInputElement>(null)
 	const [showAlert, setShowAlert] = useState(false)
@@ -132,19 +134,28 @@ function TextBox({
 						</button>
 					</div>
 
-					<div className="flex">
-						<select
-							className="bg-base-200 w-fit select select-ghost focus:outline-none"
-							value={selectedModel}
-							onChange={handleSelectChange}
-						>
-							<option value="BioMedGPT">
-								BioMedGPT-LM-7B.Q4_K_M
-							</option>
-							<option value="MedGemma">
-								MedGemma-1.5-4b-it-Q4_K_M
-							</option>
-						</select>
+					<div className="flex items-center">
+						{isChatting ? (
+							<div className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-base-content/70 bg-base-300 rounded-xl">
+								<div className="w-2 h-2 rounded-full bg-success animate-pulse"></div>
+								{selectedModel === "BioMedGPT"
+									? "BioMedGPT-LM-7B"
+									: "MedGemma-1.5-4b"}
+							</div>
+						) : (
+							<select
+								className="bg-base-200 w-fit select select-ghost focus:outline-none"
+								value={selectedModel}
+								onChange={handleSelectChange}
+							>
+								<option value="BioMedGPT">
+									BioMedGPT-LM-7B.Q4_K_M
+								</option>
+								<option value="MedGemma">
+									MedGemma-1.5-4b-it-Q4_K_M
+								</option>
+							</select>
+						)}
 					</div>
 				</div>
 			</div>
