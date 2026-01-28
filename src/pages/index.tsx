@@ -79,50 +79,6 @@ export default function Home() {
 
 	return (
 		<div className="flex flex-col items-center justify-center w-full h-screen bg-base-100 relative">
-			<div className="absolute top-6 right-8 flex items-center gap-4 z-50">
-				{session?.user && (
-					<div className="flex items-center gap-3 bg-base-200 p-2 pl-4 rounded-full border border-base-300 shadow-sm">
-						<div className="flex flex-col items-end leading-tight">
-							<span className="text-xs font-bold">
-								{session.user.name}
-							</span>
-							<span className="text-[10px] opacity-60">
-								{session.user.email}
-							</span>
-						</div>
-						<div className="dropdown dropdown-end">
-							<label
-								tabIndex={0}
-								className="btn btn-ghost btn-circle avatar online"
-							>
-								<div className="w-10 rounded-full">
-									<img
-										src={
-											session.user.picture ||
-											`https://ui-avatars.com/api/?name=${session.user.name}`
-										}
-										alt="profile"
-									/>
-								</div>
-							</label>
-							<ul
-								tabIndex={0}
-								className="mt-4 p-2 shadow menu menu-sm dropdown-content bg-base-200 rounded-box w-52 border border-base-300"
-							>
-								<li>
-									<button
-										onClick={() => signOut()}
-										className="text-error font-semibold"
-									>
-										Sign Out
-									</button>
-								</li>
-							</ul>
-						</div>
-					</div>
-				)}
-			</div>
-
 			{messages.length > 0 ? (
 				<div className="flex flex-col items-center justify-center h-full w-2/5">
 					<div className="flex w-full my-4">
