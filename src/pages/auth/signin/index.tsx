@@ -12,7 +12,7 @@ function SignInPage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	return (
 		<div className="flex h-screen items-center justify-center">
-			<div className="flex flex-col bg-base-300 p-10 rounded-4xl items-center">
+			<div className="flex flex-col bg-base-200 p-6 rounded-4xl items-center">
 				{Object.values(providers).map((provider) => (
 					<div key={provider.name} className="p-4">
 						<button
