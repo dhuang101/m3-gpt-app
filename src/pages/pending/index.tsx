@@ -8,7 +8,7 @@ function PendingPage() {
 				Thanks for signing up! Our admins need to manually approve your
 				account before you can access the web page. Please contact{" "}
 				<span className="font-semibold text-base-content">
-					email@monash.edu
+					chris.a.bain@monash.edu
 				</span>{" "}
 				to and we will approve you account as soon as possible
 			</article>
