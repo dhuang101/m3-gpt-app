@@ -7,13 +7,17 @@ export async function proxy(req: NextRequest) {
 	const { pathname } = req.nextUrl
 
 	// Public paths
-	const publicPaths = ["/auth/signin"]
+	const publicPaths = ["/auth/signin", "/pending"]
+
 	if (publicPaths.includes(pathname)) {
 		return NextResponse.next()
 	}
 
+	// redirect users that are not signed in
 	if (!token) {
 		return NextResponse.redirect(new URL("/auth/signin", req.url))
+	} else if (!token.approved) {
+		return NextResponse.redirect(new URL("/pending", req.url))
 	} else {
 		return NextResponse.next()
 	}

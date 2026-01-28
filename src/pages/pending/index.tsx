@@ -1,5 +1,19 @@
 function PendingPage() {
-	return <div></div>
+	return (
+		<div className="flex flex-col items-center justify-center h-screen bg-base-100 text-center p-6">
+			<article className="text-3xl font-bold mb-4">
+				Account Pending Approval
+			</article>
+			<article className="max-w-md text-base-content/70">
+				Thanks for signing up! Our admins need to manually approve your
+				account before you can access the web page. Please contact{" "}
+				<span className="font-semibold text-base-content">
+					email@monash.edu
+				</span>{" "}
+				to and we will approve you account as soon as possible
+			</article>
+		</div>
+	)
 }
 
 export default PendingPage
