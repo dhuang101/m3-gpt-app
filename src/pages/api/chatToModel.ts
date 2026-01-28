@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next"
+import { getToken } from "next-auth/jwt"
 import ollama, { Message } from "ollama"
 
 type ModelType = "BioMedGPT" | "MedGemma"
@@ -44,6 +45,13 @@ export default async function handler(
 ) {
 	if (req.method !== "POST") {
 		return res.status(405).json({ error: "Method Not Allowed" })
+	}
+
+	const token = await getToken({ req })
+	if (!token) {
+		return res.status(401).json({
+			error: "Unauthorized: Please sign in to access this resource",
+		})
 	}
 
 	const params = req.body as ParamsType
