@@ -33,8 +33,9 @@ export default function Home() {
 			setInput("")
 			setLoading(true)
 			axios
-				.post("/api/chatToBioMedGPT", {
+				.post("/api/chatToModel", {
 					messages: updatedHistory,
+					model: selectedModel,
 				})
 				.then((response) => {
 					const newResponse = response.data

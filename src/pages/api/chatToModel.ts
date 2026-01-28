@@ -1,17 +1,32 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import ollama, { Message } from "ollama"
 
+type ModelType = "biomedgpt" | "medgemma"
+
 interface ParamsType {
-	messages: Message[]
+	messages: (Message & { images?: string[] })[] // Extend message to allow images
+	model: ModelType
 }
 
-async function ChatToBioMedGPT(params: ParamsType) {
+async function ChatToModel(params: ParamsType) {
+	const modelMap: Record<ModelType, string> = {
+		biomedgpt: "biomedgpt",
+		medgemma: "medgemma-vision",
+	}
+	const selectedModel = modelMap[params.model] || "biomedgpt"
+
 	return await ollama.chat({
-		model: "biomedgpt",
+		model: selectedModel,
 		messages: params.messages,
 		stream: false,
 		options: {
-			stop: ["[/INST]", "</s>", "[INST]"],
+			stop: [
+				"[/INST]",
+				"</s>",
+				"[INST]",
+				"<end_of_turn>",
+				"<start_of_turn>",
+			],
 		},
 	})
 }
@@ -28,7 +43,7 @@ export default async function handler(
 	const params = req.body as ParamsType
 
 	try {
-		const results = await ChatToBioMedGPT(params)
+		const results = await ChatToModel(params)
 		res.status(200).json(results.message)
 	} catch (err) {
 		console.error("Error at chat :", err)
