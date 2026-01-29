@@ -2,7 +2,37 @@ import { NextApiRequest, NextApiResponse } from "next"
 import { getToken } from "next-auth/jwt"
 import ollama, { Message } from "ollama"
 
+export const config = {
+  maxDuration: 60, 
+};
+
 type ModelType = "BioMedGPT" | "MedGemma"
+
+interface ModelOptions {
+  stop: string[];
+  num_ctx: number;
+}
+
+interface ModelRegistry {
+  [key: string]: {
+    options: ModelOptions;
+  };
+}
+
+const MODEL_REGISTRY: ModelRegistry = {
+  "medgemma-vision": {
+    options: {
+      stop: ["<|im_start|>", "<|im_end|>", "<end_of_turn>", "<start_of_turn>"],
+      num_ctx: 4096,
+    }
+  },
+  "biomedgpt": {
+    options: {
+      stop: ["[/INST]", "</s>", "[INST]", "<|eot_id|>"],
+      num_ctx: 2048,
+    }
+  }
+};
 
 interface ParamsType {
 	messages: (Message & { images?: string[] })[] // Extend message to allow images
@@ -14,7 +44,9 @@ async function ChatToModel(params: ParamsType) {
 		BioMedGPT: "biomedgpt",
 		MedGemma: "medgemma-vision",
 	}
+	
 	const selectedModel = modelMap[params.model] || "biomedgpt"
+	const selectedConfig = MODEL_REGISTRY[selectedModel]
 
 	if (!params.messages || params.messages.length === 0) {
 		throw new Error("No messages provided")
@@ -27,14 +59,7 @@ async function ChatToModel(params: ParamsType) {
 		keep_alive: "1h",
 		think: false,
 		options: {
-			stop: [
-				"[/INST]",
-				"</s>",
-				"[INST]",
-				"<end_of_turn>",
-				"<start_of_turn>",
-			],
-			num_ctx: selectedModel === "medgemma-vision" ? 4096 : 2048,
+			...selectedConfig.options
 		},
 	})
 }
