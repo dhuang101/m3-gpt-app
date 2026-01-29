@@ -24,6 +24,7 @@ async function ChatToModel(params: ParamsType) {
 		model: selectedModel,
 		messages: params.messages,
 		stream: false,
+		keep_alive: "1h",
 		think: false,
 		options: {
 			stop: [
