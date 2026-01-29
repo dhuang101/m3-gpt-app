@@ -22,7 +22,7 @@ interface ModelRegistry {
 const MODEL_REGISTRY: ModelRegistry = {
   "medgemma-vision": {
     options: {
-      stop: ["<|im_start|>", "<|im_end|>", "<end_of_turn>", "<start_of_turn>"],
+      stop: ["<|im_start|>user", "<|im_start|>system", "<|im_end|>", "<end_of_turn>"],
       num_ctx: 4096,
     }
   },
