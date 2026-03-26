@@ -10,6 +10,7 @@ interface ChatMessage {
 	images?: string[]
 }
 
+// Required Change: add the new model's frontend name here
 type AvailableModels = "BioMedGPT" | "MedGemma"
 
 export default function Home() {

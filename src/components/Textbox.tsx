@@ -4,6 +4,7 @@ interface PropsType {
 	handleKeyDown: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void
 	input: string
 	setInput: React.Dispatch<React.SetStateAction<string>>
+	// Required Change: add new model's name here
 	selectedModel: "BioMedGPT" | "MedGemma"
 	setSelectedModel: React.Dispatch<
 		React.SetStateAction<"BioMedGPT" | "MedGemma">
@@ -36,16 +37,18 @@ function TextBox({
 	}
 
 	function handleSelectChange(event: React.ChangeEvent<HTMLSelectElement>) {
+		// Required Change: add new model's name here
 		const value = event.target.value as "BioMedGPT" | "MedGemma"
 		setSelectedModel(value)
-		// Clear image if switching to a non-vision model
+		// Required Change: if the new model doesn't allow images add it to this conditional
 		if (value === "BioMedGPT") clearImage()
 	}
 
 	function handleImageButtonClick() {
+		// Required Change: if the new model doesn't allow images add it to this conditional
 		if (selectedModel === "BioMedGPT") {
 			setShowAlert(true)
-			setTimeout(() => setShowAlert(false), 3000) // Auto-hide after 3s
+			setTimeout(() => setShowAlert(false), 3000)
 			return
 		}
 		fileInputRef.current?.click()
@@ -71,6 +74,7 @@ function TextBox({
 							d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
 						/>
 					</svg>
+					{/* Required Change: if the new model doesn't allow images you can add it to this alert*/}
 					<span>BioMedGPT does not support images.</span>
 				</div>
 			)}
@@ -138,6 +142,7 @@ function TextBox({
 						{isChatting ? (
 							<div className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-base-content/70 bg-base-300 rounded-xl">
 								<div className="w-2 h-2 rounded-full bg-success animate-pulse"></div>
+								{/* Required Change: add the new model here, ternary syntax can be confusing use AI if you get confused*/}
 								{selectedModel === "BioMedGPT"
 									? "BioMedGPT-LM-7B"
 									: "MedGemma-1.5-4b"}
@@ -148,6 +153,7 @@ function TextBox({
 								value={selectedModel}
 								onChange={handleSelectChange}
 							>
+								{/* Required Change: add the new model here, this is the dropdown where it will be selected*/}
 								<option value="BioMedGPT">
 									BioMedGPT-LM-7B.Q4_K_M
 								</option>
