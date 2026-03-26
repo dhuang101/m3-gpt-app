@@ -1,40 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# M3 GPT App
+
+This application contains both the frontend and middleware required to interface with  Ollama hosted LLM's to provide an easy platform to share LLMs. It also contains a primitive authentication setup
+
+## Main Documentation
+[Google Docs](https://docs.google.com/document/d/1hoizr7yDfuu7pSCjOcFZfXq7PDXYB2S1XqjrusBLiOo/edit?usp=sharing)
+
+## Dependencies 
+
+The app is currently built using [Node.js](https://nodejs.org/en) v22.11.0
+
+It is recommended to use nvm 
+- [UNIX](https://github.com/nvm-sh/nvm) 
+- [Windows](https://github.com/coreybutler/nvm-windows) 
+  
+to manage your versions of node.
+
+###  Tech Stack
+
+| Category           | Tech |
+|--------------------|------|
+| **Framework**      | [Next.js](https://nextjs.org/) |
+| **UI Library**     | [React](https://react.dev/) |
+| **Language**       | [TypeScript](https://www.typescriptlang.org/) |
+| **Styling**        | [Tailwind CSS](https://tailwindcss.com/) / [DaisyUI](https://daisyui.com/) |
+| **Auth**           | [NextAuth.js](https://next-auth.js.org/) |
 
 ## Getting Started
 
-First, run the development server:
+### Clone the repository
+View the repository at [GitHub](https://github.com/dhuang101/m3-gpt-app)
+```bash
+git clone https://github.com/dhuang101/m3-gpt-appgit
+cd m3-gpt-app
+```
 
+### Install Dependencies
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+### Setup .env.local
+Create a .env.local file in the root:
+```bash
+NEXTAUTH_URL = "URL for NextAuthJS"
+NEXTAUTH_SECRET = "Secret for NextAuthJS"
+
+NEXT_PUBLIC_AUTH0_CLIENT_ID = "Auth0's client ID made public to the frontend"
+NEXT_PUBLIC_AUTH0_ISSUER = "Auth0's issuer URL made public to the frontend"
+AUTH0_CLIENT_SECRET = "the secret key for Auth0"
+```
+
+### Start dev server
 ```bash
 npm run dev
 # or
 yarn dev
 # or
 pnpm dev
-# or
-bun dev
+```
+Your app is now running at http://localhost:3000
+
+## Build
+
+To build the app simply run ```npm run build```. This will create a built version of the application which can then be launched using ```npm start```. The app will then be running on [localhost:3000](http:localhost:3000) or the UNIX equivalent address.
+
+## File Structure
+```
+.
+├── public/             # Static assets
+├── src/
+│   ├── components/     # Reusable UI components
+│   ├── pages/          # Next.js pages (routes)
+│   ├── styles/         # TailwindCSS/DaisyUI dependencies
+│   ├── types/          # Reusable TS Types
+│   └── proxy.ts        # NextJS proxy function
+├── .env.local          # Local environment variables
+├── next.config.js      # Next.js configuration
+├── tsconfig.json       # TypeScript configuration
+└── package.json
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
