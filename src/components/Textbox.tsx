@@ -1,13 +1,22 @@
 import React, { useRef, useState } from "react"
 
+const MODEL_NAMES = {
+	"medgemma-1.5-4b": "MedGemma 1.5 (4b)",
+	"medgemma-1.0-4b": "MedGemma 1.0 (4b)",
+	"medgemma-1.0-27b": "MedGemma 1.0 (27b)",
+}
+
 interface PropsType {
 	handleKeyDown: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void
 	input: string
 	setInput: React.Dispatch<React.SetStateAction<string>>
 	// Required Change: add new model's name here
-	selectedModel: "BioMedGPT" | "MedGemma"
+	selectedModel: "medgemma-1.5-4b" | "medgemma-1.0-4b" | "medgemma-1.0-27b"
+
 	setSelectedModel: React.Dispatch<
-		React.SetStateAction<"BioMedGPT" | "MedGemma">
+		React.SetStateAction<
+			"medgemma-1.5-4b" | "medgemma-1.0-4b" | "medgemma-1.0-27b"
+		>
 	>
 	selectedImage: string | null
 	onImageUpload: (file: File) => void
@@ -27,7 +36,6 @@ function TextBox({
 	isChatting,
 }: PropsType) {
 	const fileInputRef = useRef<HTMLInputElement>(null)
-	const [showAlert, setShowAlert] = useState(false)
 
 	function handleInput(event: React.ChangeEvent<HTMLTextAreaElement>) {
 		const element = event.target
@@ -38,47 +46,19 @@ function TextBox({
 
 	function handleSelectChange(event: React.ChangeEvent<HTMLSelectElement>) {
 		// Required Change: add new model's name here
-		const value = event.target.value as "BioMedGPT" | "MedGemma"
+		const value = event.target.value as
+			| "medgemma-1.5-4b"
+			| "medgemma-1.0-4b"
+			| "medgemma-1.0-27b"
 		setSelectedModel(value)
-		// Required Change: if the new model doesn't allow images add it to this conditional
-		if (value === "BioMedGPT") clearImage()
 	}
 
 	function handleImageButtonClick() {
-		// Required Change: if the new model doesn't allow images add it to this conditional
-		if (selectedModel === "BioMedGPT") {
-			setShowAlert(true)
-			setTimeout(() => setShowAlert(false), 3000)
-			return
-		}
 		fileInputRef.current?.click()
 	}
 
 	return (
 		<div className="relative w-full max-w-2xl">
-			{showAlert && (
-				<div
-					role="alert"
-					className="alert alert-warning shadow-lg mb-4 absolute -top-16 transition-all"
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						className="stroke-current shrink-0 h-6 w-6"
-						fill="none"
-						viewBox="0 0 24 24"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth="2"
-							d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-						/>
-					</svg>
-					{/* Required Change: if the new model doesn't allow images you can add it to this alert*/}
-					<span>BioMedGPT does not support images.</span>
-				</div>
-			)}
-
 			<div className="flex flex-col items-center w-full px-4 py-2 bg-base-200 rounded-4xl border border-base-content/10 focus-within:border-base-content/20 transition-all ">
 				{selectedImage && (
 					<div className="relative self-start m-2 group">
@@ -97,7 +77,7 @@ function TextBox({
 				)}
 
 				<textarea
-					placeholder={`Ask ${selectedModel}`}
+					placeholder={`Ask ${MODEL_NAMES[selectedModel]}`}
 					className="textarea textarea-ghost focus:outline-none focus:bg-transparent border-none w-full min-h-12 overflow-hidden text-base-content placeholder:text-base-content/50 px-2 text-lg resize-none leading-7 max-h-53 overflow-y-auto"
 					value={input}
 					onKeyDown={handleKeyDown}
@@ -143,9 +123,7 @@ function TextBox({
 							<div className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-base-content/70 bg-base-300 rounded-xl">
 								<div className="w-2 h-2 rounded-full bg-success animate-pulse"></div>
 								{/* Required Change: add the new model here, ternary syntax can be confusing use AI if you get confused*/}
-								{selectedModel === "BioMedGPT"
-									? "BioMedGPT-LM-7B"
-									: "MedGemma-1.5-4b"}
+								{`${MODEL_NAMES[selectedModel]}`}
 							</div>
 						) : (
 							<select
@@ -154,11 +132,14 @@ function TextBox({
 								onChange={handleSelectChange}
 							>
 								{/* Required Change: add the new model here, this is the dropdown where it will be selected*/}
-								<option value="BioMedGPT">
-									BioMedGPT-LM-7B.Q4_K_M
-								</option>
-								<option value="MedGemma">
+								<option value="medgemma-1.5-4b">
 									MedGemma-1.5-4b-it-Q4_K_M
+								</option>
+								<option value="medgemma-1.0-4b">
+									MedGemma-1.0-4b-it-Q4_K_M
+								</option>
+								<option value="medgemma-1.0-27b">
+									MedGemma-1.0-27b-it-Q6_K
 								</option>
 							</select>
 						)}

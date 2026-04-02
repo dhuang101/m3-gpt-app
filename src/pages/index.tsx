@@ -11,13 +11,16 @@ interface ChatMessage {
 }
 
 // Required Change: add the new model's frontend name here
-type AvailableModels = "BioMedGPT" | "MedGemma"
+type AvailableModels =
+	| "medgemma-1.5-4b"
+	| "medgemma-1.0-4b"
+	| "medgemma-1.0-27b"
 
 export default function Home() {
 	const { data: session } = useSession()
 
 	const [selectedModel, setSelectedModel] =
-		useState<AvailableModels>("BioMedGPT")
+		useState<AvailableModels>("medgemma-1.5-4b")
 	const [input, setInput] = useState("")
 	const [messages, setMessages] = useState<ChatMessage[]>([])
 	const [loading, setLoading] = useState(false)
