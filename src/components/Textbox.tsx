@@ -1,5 +1,8 @@
 import React, { useRef, useState } from "react"
 
+{
+	/* Required Change: add the new model here */
+}
 const MODEL_NAMES = {
 	"medgemma-1.5-4b": "MedGemma 1.5 (4b)",
 	"medgemma-1.0-4b": "MedGemma 1.0 (4b)",
@@ -122,7 +125,7 @@ function TextBox({
 						{isChatting ? (
 							<div className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-base-content/70 bg-base-300 rounded-xl">
 								<div className="w-2 h-2 rounded-full bg-success animate-pulse"></div>
-								{/* Required Change: add the new model here, ternary syntax can be confusing use AI if you get confused*/}
+								{/* Required Change: add the new model here */}
 								{`${MODEL_NAMES[selectedModel]}`}
 							</div>
 						) : (

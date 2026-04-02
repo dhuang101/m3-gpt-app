@@ -7,7 +7,7 @@ export const config = {
 }
 
 // Required Change: add the new model's name as named in the frontend here
-type ModelType = "BioMedGPT" | "MedGemma"
+type ModelType = "medgemma-1.5-4b" | "medgemma-1.0-4b" | "medgemma-1.0-27b"
 
 interface ModelOptions {
 	stop: string[]
@@ -22,7 +22,7 @@ interface ModelRegistry {
 
 // Required Change: add a new key with the same name as the model in Ollama, then add the options: stop=stop tags aligned with ModelFile, num_ctx=context size
 const MODEL_REGISTRY: ModelRegistry = {
-	"medgemma-vision": {
+	"medgemma-1.5-4b": {
 		options: {
 			stop: [
 				"<|im_start|>user",
@@ -33,10 +33,26 @@ const MODEL_REGISTRY: ModelRegistry = {
 			num_ctx: 4096,
 		},
 	},
-	biomedgpt: {
+	"medgemma-1.0-4b": {
 		options: {
-			stop: ["[/INST]", "</s>", "[INST]", "<|eot_id|>"],
-			num_ctx: 2048,
+			stop: [
+				"<|im_start|>user",
+				"<|im_start|>system",
+				"<|im_end|>",
+				"<end_of_turn>",
+			],
+			num_ctx: 4096,
+		},
+	},
+	"medgemma-1.0-27b": {
+		options: {
+			stop: [
+				"<|im_start|>user",
+				"<|im_start|>system",
+				"<|im_end|>",
+				"<end_of_turn>",
+			],
+			num_ctx: 4096,
 		},
 	},
 }
@@ -48,12 +64,7 @@ interface ParamsType {
 
 async function ChatToModel(params: ParamsType) {
 	// Required Change: add the new model to the map in this format frontendName: ollamaName
-	const modelMap: Record<ModelType, string> = {
-		BioMedGPT: "biomedgpt",
-		MedGemma: "medgemma-vision",
-	}
-
-	const selectedModel = modelMap[params.model] || "biomedgpt"
+	const selectedModel = params.model as ModelType
 	const selectedConfig = MODEL_REGISTRY[selectedModel]
 
 	if (!params.messages || params.messages.length === 0) {
