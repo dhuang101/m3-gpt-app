@@ -6,12 +6,12 @@ const MODELS = [
 	},
 	{
 		name: "MedGemma 1.0 4B",
-		hfUrl: "https://huggingface.co/google/medgemma-1.0-4b-it",
+		hfUrl: "https://huggingface.co/google/medgemma-4b-it",
 		dateAdded: "2026-04-16",
 	},
 	{
 		name: "MedGemma 1.0 27B",
-		hfUrl: "https://huggingface.co/google/medgemma-1.0-27b-it",
+		hfUrl: "https://huggingface.co/google/medgemma-27b-it",
 		dateAdded: "2026-04-16",
 	},
 ]
