@@ -89,7 +89,7 @@ function TextBox({
 				/>
 
 				<div className="flex justify-between w-full px-2 mt-2">
-					<div>
+					<div className="relative group">
 						<input
 							type="file"
 							className="hidden"
@@ -100,6 +100,7 @@ function TextBox({
 							}
 							accept="image/*"
 						/>
+
 						<button
 							onClick={handleImageButtonClick}
 							className={`btn btn-ghost btn-circle hover:bg-base-300 btn-sm ${selectedImage ? "text-primary" : ""}`}
@@ -119,6 +120,15 @@ function TextBox({
 								/>
 							</svg>
 						</button>
+
+						{/* Tooltip implementation */}
+						<span
+							className="absolute top-full left-1/2 -translate-x-1/2 px-2 py-1 
+                     bg-base-300 text-base-content text-md rounded opacity-0 
+                     group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
+						>
+							Upload Image
+						</span>
 					</div>
 
 					<div className="flex items-center">
