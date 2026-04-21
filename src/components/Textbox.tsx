@@ -89,7 +89,10 @@ function TextBox({
 				/>
 
 				<div className="flex justify-between w-full px-2 mt-2">
-					<div>
+					<div
+						className="tooltip tooltip-neutral"
+						data-tip="Upload Image"
+					>
 						<input
 							type="file"
 							className="hidden"
