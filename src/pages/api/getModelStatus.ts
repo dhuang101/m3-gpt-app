@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 import { getToken } from "next-auth/jwt"
 import ollama from "ollama"
 
-async function GetLlmStatus() {
+async function GetModelStatus() {
 	try {
 		const status = await ollama.ps()
 		const isBusy = status.models.length > 0
@@ -38,7 +38,7 @@ export default async function handler(
 	}
 
 	try {
-		const results = await GetLlmStatus()
+		const results = await GetModelStatus()
 		res.status(200).json(results)
 	} catch (err) {
 		console.error("Error at status :", err)
