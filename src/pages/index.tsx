@@ -3,6 +3,7 @@ import TextBox from "@/components/Textbox"
 import axios from "axios"
 import React, { useState } from "react"
 import { useSession, signOut } from "next-auth/react"
+import useSWR from "swr" // Import SWR
 
 interface ChatMessage {
 	role: "user" | "assistant"
@@ -25,6 +26,15 @@ export default function Home() {
 	const [messages, setMessages] = useState<ChatMessage[]>([])
 	const [loading, setLoading] = useState(false)
 	const [selectedImage, setSelectedImage] = useState<string | null>(null)
+
+	const { data: status } = useSWR(
+		"/api/getModelStatus",
+		(url: string) => axios.get(url).then((res) => res.data),
+		{
+			refreshInterval: 5000, // Poll every 5 seconds
+			revalidateOnFocus: true,
+		},
+	)
 
 	const convertToBase64 = (file: File): Promise<string> => {
 		return new Promise((resolve, reject) => {
