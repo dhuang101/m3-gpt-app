@@ -35,6 +35,25 @@ export default function Home() {
 			revalidateOnFocus: true,
 		},
 	)
+	const activeCount = status?.details?.length || 0
+	const getStatusConfig = (count: number) => {
+		if (count >= 3)
+			return { color: "bg-error", label: "High Load", text: "text-error" }
+		if (count === 2)
+			return { color: "bg-warning", label: "Busy", text: "text-warning" }
+		if (count === 1)
+			return {
+				color: "bg-success",
+				label: "Normal",
+				text: "text-success",
+			}
+		return {
+			color: "bg-slate-500",
+			label: "Idle",
+			text: "text-base-content/50",
+		}
+	}
+	const statusConfig = getStatusConfig(activeCount)
 
 	const convertToBase64 = (file: File): Promise<string> => {
 		return new Promise((resolve, reject) => {
@@ -159,7 +178,7 @@ export default function Home() {
 					</article>
 				</div>
 			) : (
-				<div className="flex items-center justify-center w-1/2">
+				<div className="flex flex-col items-center justify-center w-1/2">
 					<TextBox
 						handleKeyDown={handleKeyDown}
 						input={input}
@@ -174,6 +193,40 @@ export default function Home() {
 						clearImage={() => setSelectedImage(null)}
 						isChatting={false}
 					/>
+					<div className="mt-4 w-full max-w-md bg-base-200/50 rounded-xl p-3 border border-base-300 flex items-center justify-between transition-all duration-500">
+						<div className="flex items-center gap-3">
+							<div className="flex gap-1.5 p-1 bg-black/10 rounded-full">
+								<div
+									className={`w-3 h-3 rounded-full transition-all duration-500 ${activeCount >= 3 ? "bg-error shadow-[0_0_8px_#ff52d9]" : "bg-error/20"}`}
+								/>
+								<div
+									className={`w-3 h-3 rounded-full transition-all duration-500 ${activeCount === 2 ? "bg-warning shadow-[0_0_8px_#ffbe00]" : "bg-warning/20"}`}
+								/>
+								<div
+									className={`w-3 h-3 rounded-full transition-all duration-500 ${activeCount === 1 ? "bg-success shadow-[0_0_8px_#00ff00]" : "bg-success/20"}`}
+								/>
+							</div>
+							<div>
+								<p className="text-xs font-bold uppercase tracking-wider opacity-60">
+									System Status
+								</p>
+								<p
+									className={`text-sm font-medium ${statusConfig.text}`}
+								>
+									{statusConfig.label}
+								</p>
+							</div>
+						</div>
+
+						<div className="text-right">
+							<p className="text-[10px] uppercase opacity-50">
+								Active Models
+							</p>
+							<p className="text-lg font-mono font-bold leading-none">
+								{activeCount}
+							</p>
+						</div>
+					</div>
 				</div>
 			)}
 		</div>
