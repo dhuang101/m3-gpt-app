@@ -32,7 +32,7 @@ export default function Home() {
 		"/api/getModelStatus",
 		(url: string) => axios.get(url).then((res) => res.data),
 		{
-			refreshInterval: 10000, // Poll every 10 seconds
+			refreshInterval: 15000, // Poll every 15 seconds
 			revalidateOnFocus: true,
 		},
 	)
