@@ -37,24 +37,6 @@ export default function Home() {
 		},
 	)
 	const activeCount = status?.details?.length || 0
-	const getStatusConfig = (count: number) => {
-		if (count >= 3)
-			return { color: "bg-error", label: "High Load", text: "text-error" }
-		if (count === 2)
-			return { color: "bg-warning", label: "Busy", text: "text-warning" }
-		if (count <= 1)
-			return {
-				color: "bg-success",
-				label: "Normal",
-				text: "text-success",
-			}
-		return {
-			color: "bg-slate-500",
-			label: "Idle",
-			text: "text-base-content/50",
-		}
-	}
-	const statusConfig = getStatusConfig(activeCount)
 
 	const convertToBase64 = (file: File): Promise<string> => {
 		return new Promise((resolve, reject) => {
