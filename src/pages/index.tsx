@@ -3,7 +3,7 @@ import TextBox from "@/components/Textbox"
 import axios from "axios"
 import React, { useState } from "react"
 import { useSession, signOut } from "next-auth/react"
-import useSWR from "swr" // Import SWR
+import useSWR from "swr"
 
 interface ChatMessage {
 	role: "user" | "assistant"
@@ -41,7 +41,7 @@ export default function Home() {
 			return { color: "bg-error", label: "High Load", text: "text-error" }
 		if (count === 2)
 			return { color: "bg-warning", label: "Busy", text: "text-warning" }
-		if (count === 1)
+		if (count <= 1)
 			return {
 				color: "bg-success",
 				label: "Normal",
@@ -193,38 +193,46 @@ export default function Home() {
 						clearImage={() => setSelectedImage(null)}
 						isChatting={false}
 					/>
-					<div className="mt-4 w-full max-w-md bg-base-200/50 rounded-xl p-3 border border-base-300 flex items-center justify-between transition-all duration-500">
-						<div className="flex items-center gap-3">
-							<div className="flex gap-1.5 p-1 bg-black/10 rounded-full">
+					<div className="mt-4 w-full max-w-40 bg-base-200/50 rounded-lg p-2.5 border border-base-300 flex items-center justify-between transition-all duration-500">
+						<div className="flex items-center gap-2.5">
+							<div className="relative flex items-center justify-center">
 								<div
-									className={`w-3 h-3 rounded-full transition-all duration-500 ${activeCount >= 3 ? "bg-error shadow-[0_0_8px_#ff52d9]" : "bg-error/20"}`}
+									className={`w-3 h-3 rounded-full transition-all duration-700 ${
+										activeCount >= 3
+											? "bg-error shadow-[0_0_10px_#ff52d9]"
+											: activeCount === 2
+												? "bg-warning shadow-[0_0_10px_#ffbe00]"
+												: "bg-success shadow-[0_0_10px_#00ff00]"
+									}`}
 								/>
 								<div
-									className={`w-3 h-3 rounded-full transition-all duration-500 ${activeCount === 2 ? "bg-warning shadow-[0_0_8px_#ffbe00]" : "bg-warning/20"}`}
-								/>
-								<div
-									className={`w-3 h-3 rounded-full transition-all duration-500 ${activeCount === 1 ? "bg-success shadow-[0_0_8px_#00ff00]" : "bg-success/20"}`}
+									className={`absolute w-3 h-3 rounded-full animate-ping opacity-20 ${
+										activeCount >= 3
+											? "bg-error"
+											: activeCount === 2
+												? "bg-warning"
+												: "bg-success"
+									}`}
 								/>
 							</div>
 							<div>
-								<p className="text-xs font-semibold opacity-60">
-									System Status
-								</p>
-								<p
-									className={`text-sm font-medium ${statusConfig.text}`}
+								<article className="text-sm font-semibold opacity-50 leading-none mb-1">
+									System
+								</article>
+								<article
+									className={`text-xs font-semibold leading-none ${statusConfig.text}`}
 								>
 									{statusConfig.label}
-								</p>
+								</article>
 							</div>
 						</div>
-
-						<div className="text-right">
-							<p className="text-[10px] uppercase opacity-50">
-								Active Models
-							</p>
-							<p className="text-lg font-mono font-bold leading-none">
+						<div className="flex flex-col items-end border-l border-base-300 pl-3">
+							<article className="text-[9px] uppercase opacity-40 font-bold">
+								Models
+							</article>
+							<article className="text-sm font-mono font-black leading-none mt-0.5">
 								{activeCount}
-							</p>
+							</article>
 						</div>
 					</div>
 				</div>
