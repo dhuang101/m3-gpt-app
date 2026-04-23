@@ -4,6 +4,7 @@ import axios from "axios"
 import React, { useState } from "react"
 import { useSession, signOut } from "next-auth/react"
 import useSWR from "swr"
+import ModelStatusCard from "@/components/ModelStatusCard"
 
 interface ChatMessage {
 	role: "user" | "assistant"
@@ -114,13 +115,14 @@ export default function Home() {
 		<div className="flex flex-col items-center justify-center w-full h-screen bg-base-100 relative">
 			{messages.length > 0 ? (
 				<div className="flex flex-col items-center justify-center h-full w-2/5">
-					<div className="flex w-full my-4">
+					<div className="flex w-full my-4 items-center justify-between">
 						<button
 							onClick={resetConversation}
 							className="btn btn-outline rounded-full border-base-300 text-base-content hover:bg-error hover:text-white transition-all"
 						>
 							New Chat
 						</button>
+						<ModelStatusCard activeCount={activeCount} />
 					</div>
 
 					<div className="flex flex-col h-4/5 w-full overflow-y-auto p-8 mb-4">
@@ -178,7 +180,7 @@ export default function Home() {
 					</article>
 				</div>
 			) : (
-				<div className="flex flex-col items-center justify-center w-1/2">
+				<div className="flex flex-col items-center justify-center w-1/2 gap-4">
 					<TextBox
 						handleKeyDown={handleKeyDown}
 						input={input}
@@ -193,48 +195,7 @@ export default function Home() {
 						clearImage={() => setSelectedImage(null)}
 						isChatting={false}
 					/>
-					<div className="mt-4 w-full max-w-40 bg-base-200/50 rounded-lg p-2.5 border border-base-300 flex items-center justify-between transition-all duration-500">
-						<div className="flex items-center gap-2.5">
-							<div className="relative flex items-center justify-center">
-								<div
-									className={`w-3 h-3 rounded-full transition-all duration-700 ${
-										activeCount >= 3
-											? "bg-error shadow-[0_0_10px_#ff52d9]"
-											: activeCount === 2
-												? "bg-warning shadow-[0_0_10px_#ffbe00]"
-												: "bg-success shadow-[0_0_10px_#00ff00]"
-									}`}
-								/>
-								<div
-									className={`absolute w-3 h-3 rounded-full animate-ping opacity-20 ${
-										activeCount >= 3
-											? "bg-error"
-											: activeCount === 2
-												? "bg-warning"
-												: "bg-success"
-									}`}
-								/>
-							</div>
-							<div>
-								<article className="text-sm font-semibold opacity-50 leading-none mb-1">
-									System
-								</article>
-								<article
-									className={`text-xs font-semibold leading-none ${statusConfig.text}`}
-								>
-									{statusConfig.label}
-								</article>
-							</div>
-						</div>
-						<div className="flex flex-col items-end border-l border-base-300 pl-3">
-							<article className="text-[9px] uppercase opacity-40 font-bold">
-								Models
-							</article>
-							<article className="text-sm font-mono font-black leading-none mt-0.5">
-								{activeCount}
-							</article>
-						</div>
-					</div>
+					<ModelStatusCard activeCount={activeCount} />
 				</div>
 			)}
 		</div>
