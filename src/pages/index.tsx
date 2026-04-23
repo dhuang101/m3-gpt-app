@@ -31,7 +31,7 @@ export default function Home() {
 		"/api/getModelStatus",
 		(url: string) => axios.get(url).then((res) => res.data),
 		{
-			refreshInterval: 5000, // Poll every 5 seconds
+			refreshInterval: 10000, // Poll every 10 seconds
 			revalidateOnFocus: true,
 		},
 	)
@@ -207,7 +207,7 @@ export default function Home() {
 								/>
 							</div>
 							<div>
-								<p className="text-xs font-bold uppercase tracking-wider opacity-60">
+								<p className="text-xs font-semibold opacity-60">
 									System Status
 								</p>
 								<p
