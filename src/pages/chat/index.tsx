@@ -5,6 +5,7 @@ import React, { useState } from "react"
 import { useSession, signOut } from "next-auth/react"
 import useSWR from "swr"
 import ModelStatusCard from "@/components/ModelStatusCard"
+import Link from "next/link"
 
 interface ChatMessage {
 	role: "user" | "assistant"
@@ -12,7 +13,6 @@ interface ChatMessage {
 	images?: string[]
 }
 
-// Required Change: add the new model's frontend name here
 type AvailableModels =
 	| "medgemma-1.5-4b"
 	| "medgemma-1.0-4b"
@@ -33,7 +33,7 @@ function ChatPage() {
 		"/api/getModelStatus",
 		(url: string) => axios.get(url).then((res) => res.data),
 		{
-			refreshInterval: 15000, // Poll every 15 seconds
+			refreshInterval: 15000,
 			revalidateOnFocus: true,
 		},
 	)
@@ -128,7 +128,32 @@ function ChatPage() {
 									)}
 
 								{message.role === "assistant" ? (
-									<ChatResponse content={message.content} />
+									<div className="flex flex-col gap-2">
+										<ChatResponse
+											content={message.content}
+										/>
+										{i === messages.length - 1 && (
+											<Link
+												href={
+													process.env
+														.NEXT_PUBLIC_FEEDBACK_FORM_URL as string
+												}
+												target="_blank"
+												rel="noopener noreferrer"
+												className="text-xs text-primary/70 hover:text-primary transition-colors flex items-center gap-1 mt-1 self-start"
+											>
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
+													viewBox="0 0 16 16"
+													fill="currentColor"
+													className="w-3 h-3"
+												>
+													<path d="M2 10a4 4 0 0 1 4-4h4V4.5a.5.5 0 0 1 .854-.354l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.854-.354V9H6a2 2 0 0 0-2 2v.5a.5.5 0 0 1-1 0V10Z" />
+												</svg>
+												Provide Feedback
+											</Link>
+										)}
+									</div>
 								) : (
 									<p className="whitespace-pre-wrap">
 										{message.content}

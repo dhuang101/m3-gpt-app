@@ -53,6 +53,8 @@ NEXTAUTH_SECRET = "Secret for NextAuthJS"
 NEXT_PUBLIC_AUTH0_CLIENT_ID = "Auth0's client ID made public to the frontend"
 NEXT_PUBLIC_AUTH0_ISSUER = "Auth0's issuer URL made public to the frontend"
 AUTH0_CLIENT_SECRET = "the secret key for Auth0"
+
+NEXT_PUBLIC_FEEDBACK_FORM_URL = "the URL for the feedback form"
 ```
 
 ### Start dev server
