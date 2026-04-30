@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react"
+import React, { useRef } from "react"
 
 {
 	/* Required Change: add the new model here */
@@ -14,13 +14,11 @@ interface PropsType {
 	handleKeyDown: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void
 	input: string
 	setInput: React.Dispatch<React.SetStateAction<string>>
-	// Required Change: add new model's name here
 	selectedModel:
 		| "medgemma-1.5-4b"
 		| "medgemma-1.0-4b"
 		| "medgemma-1.0-27b"
 		| "medllama-3-8b"
-
 	setSelectedModel: React.Dispatch<
 		React.SetStateAction<
 			| "medgemma-1.5-4b"
@@ -47,6 +45,7 @@ function TextBox({
 	isChatting,
 }: PropsType) {
 	const fileInputRef = useRef<HTMLInputElement>(null)
+	const isVisionSupported = selectedModel.includes("medgemma")
 
 	function handleInput(event: React.ChangeEvent<HTMLTextAreaElement>) {
 		const element = event.target
@@ -61,16 +60,24 @@ function TextBox({
 			| "medgemma-1.5-4b"
 			| "medgemma-1.0-4b"
 			| "medgemma-1.0-27b"
+			| "medllama-3-8b"
+
+		if (!value.includes("medgemma") && selectedImage) {
+			clearImage()
+		}
+
 		setSelectedModel(value)
 	}
 
 	function handleImageButtonClick() {
-		fileInputRef.current?.click()
+		if (isVisionSupported) {
+			fileInputRef.current?.click()
+		}
 	}
 
 	return (
 		<div className="relative w-full max-w-2xl">
-			<div className="flex flex-col items-center w-full px-4 py-2 bg-base-200 rounded-4xl border border-base-content/10 focus-within:border-base-content/20 transition-all ">
+			<div className="flex flex-col items-center w-full px-4 py-2 bg-base-200 rounded-4xl border border-base-content/10 focus-within:border-base-content/20 transition-all">
 				{selectedImage && (
 					<div className="relative self-start m-2 group">
 						<img
@@ -98,13 +105,18 @@ function TextBox({
 
 				<div className="flex justify-between w-full px-2 mt-2">
 					<div
-						className="tooltip tooltip-neutral"
-						data-tip="Upload Image"
+						className="tooltip tooltip-accent tooltip-bottom"
+						data-tip={
+							isVisionSupported
+								? "Upload Image"
+								: "Vision not supported for this model"
+						}
 					>
 						<input
 							type="file"
 							className="hidden"
 							ref={fileInputRef}
+							disabled={!isVisionSupported}
 							onChange={(e) =>
 								e.target.files?.[0] &&
 								onImageUpload(e.target.files[0])
@@ -114,7 +126,10 @@ function TextBox({
 
 						<button
 							onClick={handleImageButtonClick}
-							className={`btn btn-ghost btn-circle hover:bg-base-300 btn-sm ${selectedImage ? "text-primary" : ""}`}
+							disabled={!isVisionSupported}
+							className={`btn btn-ghost btn-circle hover:bg-base-300 btn-sm 
+                                ${selectedImage ? "text-primary" : ""} 
+                                ${!isVisionSupported ? "btn-disabled opacity-60" : ""}`}
 						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
