@@ -1,185 +1,96 @@
-import { ChatResponse } from "@/components/ChatResponse"
-import TextBox from "@/components/Textbox"
-import axios from "axios"
-import React, { useState } from "react"
-import { useSession, signOut } from "next-auth/react"
-import useSWR from "swr"
-import ModelStatusCard from "@/components/ModelStatusCard"
+const MODELS = [
+	{
+		name: "MedGemma 1.5 4B",
+		hfUrl: "https://huggingface.co/google/medgemma-1.5-4b-it",
+		dateAdded: "2026-02-10",
+	},
+	{
+		name: "MedGemma 1.0 4B",
+		hfUrl: "https://huggingface.co/google/medgemma-4b-it",
+		dateAdded: "2026-04-16",
+	},
+	{
+		name: "MedGemma 1.0 27B",
+		hfUrl: "https://huggingface.co/google/medgemma-27b-it",
+		dateAdded: "2026-04-16",
+	},
+]
 
-interface ChatMessage {
-	role: "user" | "assistant"
-	content: string
-	images?: string[]
-}
-
-// Required Change: add the new model's frontend name here
-type AvailableModels =
-	| "medgemma-1.5-4b"
-	| "medgemma-1.0-4b"
-	| "medgemma-1.0-27b"
-
-export default function Home() {
-	const { data: session } = useSession()
-
-	const [selectedModel, setSelectedModel] =
-		useState<AvailableModels>("medgemma-1.5-4b")
-	const [input, setInput] = useState("")
-	const [messages, setMessages] = useState<ChatMessage[]>([])
-	const [loading, setLoading] = useState(false)
-	const [selectedImage, setSelectedImage] = useState<string | null>(null)
-
-	const { data: status } = useSWR(
-		"/api/getModelStatus",
-		(url: string) => axios.get(url).then((res) => res.data),
-		{
-			refreshInterval: 15000, // Poll every 15 seconds
-			revalidateOnFocus: true,
-		},
-	)
-	const activeCount = status?.details?.length || 0
-
-	const convertToBase64 = (file: File): Promise<string> => {
-		return new Promise((resolve, reject) => {
-			const reader = new FileReader()
-			reader.readAsDataURL(file)
-			reader.onload = () => {
-				const base64String = (reader.result as string).split(",")[1]
-				resolve(base64String)
-			}
-			reader.onerror = (error) => reject(error)
-		})
-	}
-
-	function resetConversation() {
-		setMessages([])
-		setInput("")
-		setSelectedImage(null)
-		setLoading(false)
-	}
-
-	async function handleKeyDown(
-		event: React.KeyboardEvent<HTMLTextAreaElement>,
-	) {
-		if (
-			event.key === "Enter" &&
-			!event.shiftKey &&
-			(input.trim() !== "" || selectedImage)
-		) {
-			event.preventDefault()
-
-			const newMessage: ChatMessage = {
-				role: "user",
-				content: input,
-				...(selectedImage && { images: [selectedImage] }),
-			}
-
-			const updatedHistory = [...messages, newMessage]
-			setMessages(updatedHistory)
-			setInput("")
-			setSelectedImage(null)
-			setLoading(true)
-
-			try {
-				const response = await axios.post("/api/chatToModel", {
-					messages: updatedHistory,
-					model: selectedModel,
-				})
-				setMessages((prev) => [...prev, response.data])
-			} catch (error) {
-				console.error("Error fetching response:", error)
-			} finally {
-				setLoading(false)
-			}
-		}
-	}
-
+function HomePage() {
 	return (
-		<div className="flex flex-col items-center justify-center w-full h-screen bg-base-100 relative">
-			{messages.length > 0 ? (
-				<div className="flex flex-col items-center justify-center h-full w-2/5">
-					<div className="flex w-full my-4 items-center justify-between">
-						<button
-							onClick={resetConversation}
-							className="btn btn-outline rounded-full border-base-300 text-base-content hover:bg-error hover:text-white transition-all"
-						>
-							New Chat
-						</button>
-						<ModelStatusCard activeCount={activeCount} />
-					</div>
-
-					<div className="flex flex-col h-4/5 w-full overflow-y-auto p-8 mb-4">
-						{messages.map((message, i) => (
-							<div
-								key={i}
-								className={`${
-									message.role === "user"
-										? "bg-base-300 ml-auto rounded-b-3xl rounded-tl-3xl"
-										: "bg-base-200 mr-auto rounded-b-3xl rounded-tr-3xl"
-								} w-fit max-w-[85%] p-4 my-2`}
-							>
-								{message.images &&
-									message.images.length > 0 && (
-										<img
-											src={`data:image/jpeg;base64,${message.images[0]}`}
-											alt="Uploaded context"
-											className="max-w-xs rounded-lg mb-2 border border-base-content/10"
-										/>
-									)}
-
-								{message.role === "assistant" ? (
-									<ChatResponse content={message.content} />
-								) : (
-									<p className="whitespace-pre-wrap">
-										{message.content}
-									</p>
-								)}
-							</div>
-						))}
-						{loading && (
-							<div className="bg-base-200 w-fit p-4 my-4 mr-8 rounded-b-3xl rounded-tr-3xl">
-								<span className="loading loading-dots loading-md"></span>
-							</div>
-						)}
-					</div>
-
-					<TextBox
-						handleKeyDown={handleKeyDown}
-						input={input}
-						setInput={setInput}
-						selectedModel={selectedModel}
-						setSelectedModel={setSelectedModel}
-						selectedImage={selectedImage}
-						onImageUpload={async (file) => {
-							const base64 = await convertToBase64(file)
-							setSelectedImage(base64)
-						}}
-						clearImage={() => setSelectedImage(null)}
-						isChatting={true}
-					/>
-					<article className="my-2 text-sm text-base-300 italic text-center">
-						Medical LLMs can make mistakes. Always consult a
-						professional.
+		<div className="min-h-screen min-w-screen bg-base-100 flex flex-col items-center justify-center p-6">
+			<div className="max-w-4xl w-full space-y-8">
+				<div className="text-center">
+					<article className="text-4xl font-extrabold tracking-tight mb-4">
+						Monash Uni FIT Medical Gen AI Sandbox
+					</article>
+					<article className="text-lg opacity-75 max-w-2xl mx-auto">
+						This project is a sandbox environment for testing
+						generative AI models in the medical domain. It aims to
+						provide clinicians with easy access to powerful models
+						for various medical applications, such as clinical
+						decision support, medical research, and patient
+						education. The sandbox allows users to interact with
+						different models, compare their performance, and explore
+						their capabilities.
 					</article>
 				</div>
-			) : (
-				<div className="flex flex-col items-center justify-center w-1/2 gap-4">
-					<TextBox
-						handleKeyDown={handleKeyDown}
-						input={input}
-						setInput={setInput}
-						selectedModel={selectedModel}
-						setSelectedModel={setSelectedModel}
-						selectedImage={selectedImage}
-						onImageUpload={async (file) => {
-							const base64 = await convertToBase64(file)
-							setSelectedImage(base64)
-						}}
-						clearImage={() => setSelectedImage(null)}
-						isChatting={false}
-					/>
-					<ModelStatusCard activeCount={activeCount} />
+
+				<div className="bg-base-200 p-6 rounded-2xl border border-base-300">
+					<h3 className="text-xl font-bold ml-1 mb-4 flex items-center gap-2">
+						View Model Details
+					</h3>
+					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+						{MODELS.map((model, idx) => (
+							<div
+								key={idx}
+								className="bg-base-100 p-5 rounded-xl shadow-sm border border-base-300 flex flex-col justify-between"
+							>
+								<div>
+									<div className="font-bold text-lg mb-1">
+										{model.name}
+									</div>
+									<div className="flex items-center gap-2 mb-4">
+										<span className="opacity-50 font-semibold">
+											Added:
+										</span>
+										<span className="opacity-75">
+											{model.dateAdded}
+										</span>
+									</div>
+								</div>
+
+								<div className="card-actions justify-start">
+									<a
+										href={model.hfUrl}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="btn btn-sm btn-primary btn-outline gap-2 normal-case"
+									>
+										View on Hugging Face
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											fill="none"
+											viewBox="0 0 24 24"
+											strokeWidth={1.5}
+											stroke="currentColor"
+											className="w-4 h-4"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+											/>
+										</svg>
+									</a>
+								</div>
+							</div>
+						))}
+					</div>
 				</div>
-			)}
+			</div>
 		</div>
 	)
 }
+
+export default HomePage
