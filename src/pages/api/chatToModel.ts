@@ -6,8 +6,11 @@ export const config = {
 	maxDuration: 60,
 }
 
-// Required Change: add the new model's name as named in the frontend here
-type ModelType = "medgemma-1.5-4b" | "medgemma-1.0-4b" | "medgemma-1.0-27b"
+type ModelType =
+	| "medgemma-1.5-4b"
+	| "medgemma-1.0-4b"
+	| "medgemma-1.0-27b"
+	| "medllama-3-8b"
 
 interface ModelOptions {
 	stop: string[]
@@ -20,7 +23,6 @@ interface ModelRegistry {
 	}
 }
 
-// Required Change: add a new key with the same name as the model in Ollama, then add the options: stop=stop tags aligned with ModelFile, num_ctx=context size
 const MODEL_REGISTRY: ModelRegistry = {
 	"medgemma-1.5-4b": {
 		options: {
@@ -55,17 +57,31 @@ const MODEL_REGISTRY: ModelRegistry = {
 			num_ctx: 4096,
 		},
 	},
+	"medllama-3-8b": {
+		options: {
+			stop: [
+				"<|start_header_id|>",
+				"<|end_header_id|>",
+				"<|eot_id|>",
+				"<|reserved_special_token",
+			],
+			num_ctx: 4096,
+		},
+	},
 }
 
 interface ParamsType {
-	messages: (Message & { images?: string[] })[] // Extend message to allow images
+	messages: (Message & { images?: string[] })[]
 	model: ModelType
 }
 
 async function ChatToModel(params: ParamsType) {
-	// Required Change: add the new model to the map in this format frontendName: ollamaName
 	const selectedModel = params.model as ModelType
 	const selectedConfig = MODEL_REGISTRY[selectedModel]
+
+	if (!selectedConfig) {
+		throw new Error(`Model ${selectedModel} not found in registry`)
+	}
 
 	if (!params.messages || params.messages.length === 0) {
 		throw new Error("No messages provided")
@@ -76,14 +92,12 @@ async function ChatToModel(params: ParamsType) {
 		messages: params.messages,
 		stream: false,
 		keep_alive: "1h",
-		think: false,
 		options: {
 			...selectedConfig.options,
 		},
 	})
 }
 
-// handler for any calls to this endpoint
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse,
