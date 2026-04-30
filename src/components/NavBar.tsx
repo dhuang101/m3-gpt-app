@@ -11,7 +11,7 @@ function Navbar() {
 	return (
 		<div>
 			<div className="fixed top-6 left-8 z-50">
-				{pathname === "/chat" ? (
+				{pathname === "/chat" && (
 					<Link
 						href="/"
 						className="btn btn-ghost bg-base-200 rounded-full border border-base-300 shadow-sm px-6 hover:bg-base-300 flex items-center gap-2"
@@ -31,13 +31,6 @@ function Navbar() {
 							/>
 						</svg>
 						Home
-					</Link>
-				) : (
-					<Link
-						href="/chat"
-						className="btn btn-ghost bg-base-200 rounded-full border border-base-300 shadow-sm px-6 hover:bg-base-300"
-					>
-						Chat
 					</Link>
 				)}
 			</div>

@@ -1,3 +1,5 @@
+import Link from "next/link"
+
 const MODELS = [
 	{
 		name: "MedGemma 1.5 4B",
@@ -34,6 +36,28 @@ function HomePage() {
 						different models, compare their performance, and explore
 						their capabilities.
 					</article>
+					<div className="mt-8">
+						<Link
+							href="/chat"
+							className="btn btn-primary btn-lg px-8 shadow-lg hover:shadow-xl transition-all"
+						>
+							Open Chat Sandbox
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								className="h-5 w-5 ml-2"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth="2"
+									d="M13 10V3L4 14h7v7l9-11h-7z"
+								/>
+							</svg>
+						</Link>
+					</div>
 				</div>
 
 				<div className="bg-base-200 p-6 rounded-2xl border border-base-300">
