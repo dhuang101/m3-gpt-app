@@ -32,7 +32,7 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<|im_end|>",
 				"<end_of_turn>",
 			],
-			num_ctx: 4096,
+			num_ctx: 8196,
 		},
 	},
 	"medgemma-1.0-4b": {
@@ -43,7 +43,7 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<|im_end|>",
 				"<end_of_turn>",
 			],
-			num_ctx: 4096,
+			num_ctx: 8196,
 		},
 	},
 	"medgemma-1.0-27b": {
@@ -54,7 +54,7 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<|im_end|>",
 				"<end_of_turn>",
 			],
-			num_ctx: 4096,
+			num_ctx: 8196,
 		},
 	},
 	"medllama-3-8b": {
@@ -65,7 +65,7 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<|eot_id|>",
 				"<|reserved_special_token",
 			],
-			num_ctx: 4096,
+			num_ctx: 8196,
 		},
 	},
 }
