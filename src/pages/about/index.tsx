@@ -22,23 +22,23 @@ function AboutPage() {
 			<div className="max-w-4xl w-full space-y-8">
 				<div className="text-center">
 					<article className="text-4xl font-extrabold tracking-tight mb-4">
-						Monash Uni Medical LLM Sandbox
+						Monash Uni FIT Medical Gen AI Sandbox
 					</article>
 					<article className="text-lg opacity-75 max-w-2xl mx-auto">
-						This project is a sandbox environment for testing large
-						language models (LLMs) and vision language models (VLMs)
-						in the medical domain. It aims to provide clinicians
-						with easy access to powerful models for various medical
-						applications, such as clinical decision support, medical
-						research, and patient education. The sandbox allows
-						users to interact with different models, compare their
-						performance, and explore their capabilities.
+						This project is a sandbox environment for testing
+						generative AI models in the medical domain. It aims to
+						provide clinicians with easy access to powerful models
+						for various medical applications, such as clinical
+						decision support, medical research, and patient
+						education. The sandbox allows users to interact with
+						different models, compare their performance, and explore
+						their capabilities.
 					</article>
 				</div>
 
 				<div className="bg-base-200 p-6 rounded-2xl border border-base-300">
 					<h3 className="text-xl font-bold ml-1 mb-4 flex items-center gap-2">
-						Available Models
+						View Model Details
 					</h3>
 					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 						{MODELS.map((model, idx) => (
