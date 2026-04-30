@@ -7,7 +7,7 @@ const MODEL_NAMES = {
 	"medgemma-1.5-4b": "MedGemma 1.5 (4b)",
 	"medgemma-1.0-4b": "MedGemma 1.0 (4b)",
 	"medgemma-1.0-27b": "MedGemma 1.0 (27b)",
-	"medllama-3-4b": "MedLlama 3 (4b)",
+	"medllama-3-8b": "MedLlama 3 (8b)",
 }
 
 interface PropsType {
@@ -19,14 +19,14 @@ interface PropsType {
 		| "medgemma-1.5-4b"
 		| "medgemma-1.0-4b"
 		| "medgemma-1.0-27b"
-		| "medllama-3-4b"
+		| "medllama-3-8b"
 
 	setSelectedModel: React.Dispatch<
 		React.SetStateAction<
 			| "medgemma-1.5-4b"
 			| "medgemma-1.0-4b"
 			| "medgemma-1.0-27b"
-			| "medllama-3-4b"
+			| "medllama-3-8b"
 		>
 	>
 	selectedImage: string | null
@@ -155,8 +155,8 @@ function TextBox({
 								<option value="medgemma-1.0-27b">
 									MedGemma-1.0-27b-it-Q6_K
 								</option>
-								<option value="medllama-3-4b">
-									MedLlama-3-8B-v2.0
+								<option value="medllama-3-8b">
+									MedLlama-3-8B-v2.0-Q4_K_M
 								</option>
 							</select>
 						)}
