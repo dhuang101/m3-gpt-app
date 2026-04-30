@@ -36,7 +36,7 @@ function ModelStatusCard({ activeCount }: ModelStatusCardProps) {
 	const config = getStatusConfig(activeCount)
 
 	return (
-		<div className="w-full max-w-48 bg-base-200/50 rounded-lg p-2.5 border border-base-300 flex items-center justify-between transition-all duration-500">
+		<div className="w-full max-w-80 bg-base-200/50 rounded-lg p-2.5 border border-base-300 flex items-center justify-between transition-all duration-500">
 			<div className="flex items-center gap-2.5">
 				<div className="relative flex items-center justify-center">
 					<div
