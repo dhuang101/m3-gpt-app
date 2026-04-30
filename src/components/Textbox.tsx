@@ -7,6 +7,7 @@ const MODEL_NAMES = {
 	"medgemma-1.5-4b": "MedGemma 1.5 (4b)",
 	"medgemma-1.0-4b": "MedGemma 1.0 (4b)",
 	"medgemma-1.0-27b": "MedGemma 1.0 (27b)",
+	"medllama-3-4b": "MedLlama 3 (4b)",
 }
 
 interface PropsType {
@@ -14,11 +15,18 @@ interface PropsType {
 	input: string
 	setInput: React.Dispatch<React.SetStateAction<string>>
 	// Required Change: add new model's name here
-	selectedModel: "medgemma-1.5-4b" | "medgemma-1.0-4b" | "medgemma-1.0-27b"
+	selectedModel:
+		| "medgemma-1.5-4b"
+		| "medgemma-1.0-4b"
+		| "medgemma-1.0-27b"
+		| "medllama-3-4b"
 
 	setSelectedModel: React.Dispatch<
 		React.SetStateAction<
-			"medgemma-1.5-4b" | "medgemma-1.0-4b" | "medgemma-1.0-27b"
+			| "medgemma-1.5-4b"
+			| "medgemma-1.0-4b"
+			| "medgemma-1.0-27b"
+			| "medllama-3-4b"
 		>
 	>
 	selectedImage: string | null
@@ -129,7 +137,6 @@ function TextBox({
 						{isChatting ? (
 							<div className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-base-content/70 bg-base-300 rounded-xl">
 								<div className="w-2 h-2 rounded-full bg-success animate-pulse"></div>
-								{/* Required Change: add the new model here */}
 								{`${MODEL_NAMES[selectedModel]}`}
 							</div>
 						) : (
@@ -147,6 +154,9 @@ function TextBox({
 								</option>
 								<option value="medgemma-1.0-27b">
 									MedGemma-1.0-27b-it-Q6_K
+								</option>
+								<option value="medllama-3-4b">
+									MedLlama-3-8B-v2.0
 								</option>
 							</select>
 						)}

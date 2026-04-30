@@ -16,6 +16,11 @@ const MODELS = [
 		hfUrl: "https://huggingface.co/google/medgemma-27b-it",
 		dateAdded: "2026-04-16",
 	},
+	{
+		name: "MedLlama 3 4B",
+		hfUrl: "https://huggingface.co/johnsnowlabs/JSL-MedLlama-3-8B-v2.0",
+		dateAdded: "2026-04-30",
+	},
 ]
 
 function HomePage() {
