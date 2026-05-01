@@ -27,6 +27,7 @@ function ChatPage() {
 	const [input, setInput] = useState("")
 	const [messages, setMessages] = useState<ChatMessage[]>([])
 	const [loading, setLoading] = useState(false)
+	const [error, setError] = useState<string | null>("test error")
 	const [selectedImage, setSelectedImage] = useState<string | null>(null)
 
 	const { data: status } = useSWR(
@@ -56,6 +57,26 @@ function ChatPage() {
 		setInput("")
 		setSelectedImage(null)
 		setLoading(false)
+		setError(null)
+	}
+
+	async function sendMessage(history: ChatMessage[]) {
+		setLoading(true)
+		setError(null)
+		try {
+			const response = await axios.post("/api/chatToModel", {
+				messages: history,
+				model: selectedModel,
+			})
+			setMessages((prev) => [...prev, response.data])
+		} catch (err) {
+			console.error("Error fetching response:", err)
+			setError(
+				"The model failed to respond. The server may be busy or the context window was exceeded.",
+			)
+		} finally {
+			setLoading(false)
+		}
 	}
 
 	async function handleKeyDown(
@@ -78,19 +99,8 @@ function ChatPage() {
 			setMessages(updatedHistory)
 			setInput("")
 			setSelectedImage(null)
-			setLoading(true)
 
-			try {
-				const response = await axios.post("/api/chatToModel", {
-					messages: updatedHistory,
-					model: selectedModel,
-				})
-				setMessages((prev) => [...prev, response.data])
-			} catch (error) {
-				console.error("Error fetching response:", error)
-			} finally {
-				setLoading(false)
-			}
+			await sendMessage(updatedHistory)
 		}
 	}
 
@@ -150,7 +160,7 @@ function ChatPage() {
 												>
 													<path d="M2 10a4 4 0 0 1 4-4h4V4.5a.5.5 0 0 1 .854-.354l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.854-.354V9H6a2 2 0 0 0-2 2v.5a.5.5 0 0 1-1 0V10Z" />
 												</svg>
-												Provide Feedback
+												Provide Clinical Feedback
 											</Link>
 										)}
 									</div>
@@ -161,9 +171,39 @@ function ChatPage() {
 								)}
 							</div>
 						))}
+
 						{loading && (
 							<div className="bg-base-200 w-fit p-4 my-4 mr-8 rounded-b-3xl rounded-tr-3xl">
 								<span className="loading loading-dots loading-md"></span>
+							</div>
+						)}
+
+						{error && (
+							<div className="bg-error/10 border border-error/20 text-error w-fit max-w-[85%] p-4 my-2 mr-auto rounded-b-3xl rounded-tr-3xl flex flex-col gap-2">
+								<div className="flex items-center gap-2 font-semibold text-sm">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										className="h-4 w-4"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth="2"
+											d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+										/>
+									</svg>
+									Connection Error
+								</div>
+								<p className="text-xs">{error}</p>
+								<button
+									onClick={() => sendMessage(messages)}
+									className="btn btn-xs btn-error btn-outline w-fit mt-1"
+								>
+									Retry Request
+								</button>
 							</div>
 						)}
 					</div>
