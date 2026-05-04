@@ -160,7 +160,7 @@ function ChatPage() {
 												>
 													<path d="M2 10a4 4 0 0 1 4-4h4V4.5a.5.5 0 0 1 .854-.354l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.854-.354V9H6a2 2 0 0 0-2 2v.5a.5.5 0 0 1-1 0V10Z" />
 												</svg>
-												Provide Clinical Feedback
+												Provide Feedback
 											</Link>
 										)}
 									</div>
