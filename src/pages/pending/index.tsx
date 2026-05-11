@@ -12,6 +12,10 @@ function PendingPage() {
 				</span>{" "}
 				and we will approve your account as soon as possible
 			</article>
+			<article className="max-w-md text-base-content/70 mt-4">
+				If you have been approved and are still seeing this page please
+				try signing out and signing it again
+			</article>
 		</div>
 	)
 }
