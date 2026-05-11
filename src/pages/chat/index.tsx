@@ -138,7 +138,7 @@ function ChatPage() {
 									)}
 
 								{message.role === "assistant" ? (
-									<div className="flex flex-col gap-2">
+									<div className="flex flex-col gap-2 min-w-0">
 										<ChatResponse
 											content={message.content}
 										/>

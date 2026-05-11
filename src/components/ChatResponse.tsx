@@ -7,7 +7,10 @@ interface Props {
 
 export const ChatResponse = ({ content }: Props) => {
 	return (
-		<div className="prose prose-slate max-w-none dark:prose-invert">
+		<div
+			className="prose prose-slate max-w-none dark:prose-invert wrap-break-word min-w-0"
+			style={{ overflowWrap: "anywhere" }}
+		>
 			<ReactMarkdown
 				remarkPlugins={[remarkGfm]}
 				components={{
@@ -19,7 +22,7 @@ export const ChatResponse = ({ content }: Props) => {
 							</pre>
 						) : (
 							<code
-								className="bg-gray-200 dark:bg-gray-800 px-1 rounded"
+								className="bg-gray-200 dark:bg-gray-800 px-1 rounded break-all"
 								{...props}
 							>
 								{children}
@@ -28,8 +31,8 @@ export const ChatResponse = ({ content }: Props) => {
 					},
 					// Format tables for readability
 					table: ({ children }) => (
-						<div className="overflow-x-auto my-4">
-							<table className="border-collapse border border-gray-300 w-full">
+						<div className="overflow-x-auto my-4 border border-gray-300 rounded-lg">
+							<table className="border-collapse w-full">
 								{children}
 							</table>
 						</div>
