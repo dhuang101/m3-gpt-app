@@ -46,7 +46,7 @@ function HomePage() {
 							href="/chat"
 							className="btn btn-primary btn-lg px-8 shadow-lg hover:shadow-xl transition-all"
 						>
-							Open Chat Sandbox
+							Open Gen AI Sandbox
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className="h-5 w-5 ml-2"
