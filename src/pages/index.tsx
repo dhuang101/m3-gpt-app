@@ -1,30 +1,36 @@
 import Link from "next/link"
+import { Image, MessageSquareText } from "lucide-react"
 
 const MODELS = [
 	{
 		name: "MedGemma 1.5 4B",
 		hfUrl: "https://huggingface.co/google/medgemma-1.5-4b-it",
 		dateAdded: "2026-02-10",
+		hasImageSupport: true,
 	},
 	{
 		name: "MedGemma 1.0 4B",
 		hfUrl: "https://huggingface.co/google/medgemma-4b-it",
 		dateAdded: "2026-04-16",
+		hasImageSupport: true,
 	},
 	{
 		name: "MedGemma 1.0 27B",
 		hfUrl: "https://huggingface.co/google/medgemma-27b-it",
 		dateAdded: "2026-04-16",
+		hasImageSupport: true,
 	},
 	{
 		name: "MedLlama 3 8B",
 		hfUrl: "https://huggingface.co/johnsnowlabs/JSL-MedLlama-3-8B-v2.0",
 		dateAdded: "2026-04-30",
+		hasImageSupport: false,
 	},
 	{
 		name: "Lingshu 1.0 32B",
 		hfUrl: "https://huggingface.co/lingshu-medical-mllm/Lingshu-32B",
 		dateAdded: "2026-05-13",
+		hasImageSupport: false,
 	},
 ]
 
@@ -78,11 +84,34 @@ function HomePage() {
 						{MODELS.map((model, idx) => (
 							<div
 								key={idx}
-								className="bg-base-100 p-5 rounded-xl shadow-sm border border-base-300 flex flex-col justify-between"
+								className="bg-base-100 p-5 rounded-xl shadow-sm border border-base-300 flex flex-col justify-between hover:border-primary/50 transition-colors"
 							>
 								<div>
-									<div className="font-bold text-lg mb-1">
-										{model.name}
+									<div className="flex justify-between items-start mb-2">
+										<div className="font-bold text-lg leading-tight pr-2">
+											{model.name}
+										</div>
+										{/* Capability Icon with Tooltip */}
+										<div
+											className="tooltip tooltip-bottom"
+											data-tip={
+												model.hasImageSupport
+													? "Supports Vision/Images"
+													: "Text-only model"
+											}
+										>
+											{model.hasImageSupport ? (
+												<Image
+													size={18}
+													className="text-primary"
+												/>
+											) : (
+												<MessageSquareText
+													size={18}
+													className="opacity-30"
+												/>
+											)}
+										</div>
 									</div>
 									<div className="flex items-center gap-2 mb-4">
 										<span className="opacity-50 font-semibold">
