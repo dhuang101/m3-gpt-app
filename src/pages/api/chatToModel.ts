@@ -11,6 +11,7 @@ type ModelType =
 	| "medgemma-1.0-4b"
 	| "medgemma-1.0-27b"
 	| "medllama-3-8b"
+	| "lingshu-1.0-32b"
 
 interface ModelOptions {
 	stop: string[]
@@ -64,6 +65,17 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<|end_header_id|>",
 				"<|eot_id|>",
 				"<|reserved_special_token",
+			],
+			num_ctx: 16384,
+		},
+	},
+	"lingshu-1.0-32b": {
+		options: {
+			stop: [
+				"<|im_start|>",
+				"<|im_end|>",
+				"<|object_ref_start|>",
+				"<|object_ref_end|>",
 			],
 			num_ctx: 16384,
 		},

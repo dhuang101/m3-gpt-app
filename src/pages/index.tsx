@@ -21,6 +21,11 @@ const MODELS = [
 		hfUrl: "https://huggingface.co/johnsnowlabs/JSL-MedLlama-3-8B-v2.0",
 		dateAdded: "2026-04-30",
 	},
+	{
+		name: "Lingshu 1.0 32B",
+		hfUrl: "https://huggingface.co/lingshu-medical-mllm/Lingshu-32B",
+		dateAdded: "2026-05-13",
+	},
 ]
 
 function HomePage() {

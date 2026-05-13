@@ -18,6 +18,7 @@ type AvailableModels =
 	| "medgemma-1.0-4b"
 	| "medgemma-1.0-27b"
 	| "medllama-3-8b"
+	| "lingshu-1.0-32b"
 
 function ChatPage() {
 	const { data: session } = useSession()
