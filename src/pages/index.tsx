@@ -36,10 +36,10 @@ const MODELS = [
 
 function HomePage() {
 	return (
-		<div className="min-h-screen min-w-screen bg-base-100 flex flex-col items-center justify-center p-6">
-			<div className="max-w-4xl w-full space-y-8">
+		<div className="min-h-screen min-w-screen bg-base-100 flex flex-col items-center justify-center">
+			<div className="max-w-5xl w-full space-y-8">
 				<div className="text-center">
-					<article className="text-4xl font-extrabold tracking-tight mb-4">
+					<article className="text-3xl font-extrabold tracking-tight mb-3">
 						Monash Uni FIT Medical Gen AI Sandbox
 					</article>
 					<article className="text-lg opacity-75 max-w-2xl mx-auto">
@@ -52,7 +52,7 @@ function HomePage() {
 						different models, compare their performance, and explore
 						their capabilities.
 					</article>
-					<div className="mt-8">
+					<div className="mt-6">
 						<Link
 							href="/chat"
 							className="btn btn-primary btn-lg px-8 shadow-lg hover:shadow-xl transition-all"
@@ -60,7 +60,7 @@ function HomePage() {
 							Open Gen AI Sandbox
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
-								className="h-5 w-5 ml-2"
+								className="h-4 w-4 ml-2"
 								fill="none"
 								viewBox="0 0 24 24"
 								stroke="currentColor"
@@ -76,22 +76,21 @@ function HomePage() {
 					</div>
 				</div>
 
-				<div className="bg-base-200 p-6 rounded-2xl border border-base-300">
-					<h3 className="text-xl font-bold ml-1 mb-4 flex items-center gap-2">
-						View Model Details
+				<div className="bg-base-200 p-4 rounded-2xl border border-base-300">
+					<h3 className="text-md font-bold ml-1 mb-3 opacity-50 ">
+						Available Models
 					</h3>
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
 						{MODELS.map((model, idx) => (
 							<div
 								key={idx}
-								className="bg-base-100 p-5 rounded-xl shadow-sm border border-base-300 flex flex-col justify-between hover:border-primary/50 transition-colors"
+								className="bg-base-100 p-3.5 rounded-lg shadow-sm border border-base-300 flex flex-col justify-between hover:border-primary/40 transition-all group"
 							>
 								<div>
-									<div className="flex justify-between items-start mb-2">
-										<div className="font-bold text-lg leading-tight pr-2">
+									<div className="flex justify-between items-start mb-1">
+										<div className="font-bold text-sm leading-tight group-hover:text-primary transition-colors">
 											{model.name}
 										</div>
-										{/* Capability Icon with Tooltip */}
 										<div
 											className="tooltip tooltip-bottom"
 											data-tip={
@@ -113,11 +112,12 @@ function HomePage() {
 											)}
 										</div>
 									</div>
-									<div className="flex items-center gap-2 mb-4">
-										<span className="opacity-50 font-semibold">
-											Added:
+
+									<div className="flex items-center gap-1 opacity-75">
+										<span className="text-xs font-semibold">
+											Added
 										</span>
-										<span className="opacity-75">
+										<span className="text-xs">
 											{model.dateAdded}
 										</span>
 									</div>
@@ -128,7 +128,7 @@ function HomePage() {
 										href={model.hfUrl}
 										target="_blank"
 										rel="noopener noreferrer"
-										className="btn btn-sm btn-primary btn-outline gap-2 normal-case"
+										className="btn btn-xs btn-primary btn-outline gap-2 normal-case mt-2"
 									>
 										View on Hugging Face
 										<svg
