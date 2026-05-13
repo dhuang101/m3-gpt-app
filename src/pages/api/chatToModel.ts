@@ -103,7 +103,7 @@ async function ChatToModel(params: ParamsType) {
 		model: selectedModel,
 		messages: params.messages,
 		stream: false,
-		keep_alive: "1h",
+		keep_alive: "5m",
 		options: {
 			...selectedConfig.options,
 		},
