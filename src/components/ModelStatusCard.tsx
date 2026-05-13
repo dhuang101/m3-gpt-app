@@ -1,3 +1,5 @@
+import { AlertTriangle } from "lucide-react"
+
 interface ModelStatusCardProps {
 	activeCount: number
 }
@@ -34,6 +36,7 @@ function ModelStatusCard({ activeCount }: ModelStatusCardProps) {
 	}
 
 	const config = getStatusConfig(activeCount)
+	const showWarning = activeCount >= 2
 
 	return (
 		<div className="w-full max-w-md bg-base-200/50 rounded-lg p-2.5 border border-base-300 flex items-center justify-between transition-all duration-500">
@@ -50,13 +53,27 @@ function ModelStatusCard({ activeCount }: ModelStatusCardProps) {
 					<article className="text-sm font-semibold opacity-60 leading-none mb-1">
 						Status
 					</article>
-					<article
-						className={`text-xs font-semibold leading-none ${config.text}`}
-					>
-						{config.label}
-					</article>
+					<div className="flex items-center gap-1.5">
+						<article
+							className={`text-xs font-semibold leading-none ${config.text}`}
+						>
+							{config.label}
+						</article>
+					</div>
 				</div>
+				{showWarning && (
+					<div
+						className="tooltip tooltip-bottom tooltip-warning"
+						data-tip="High context models may be slow under current load"
+					>
+						<AlertTriangle
+							size={20}
+							className={`${config.text} cursor-help`}
+						/>
+					</div>
+				)}
 			</div>
+
 			<div className="flex flex-col items-end border-l border-base-300 pl-3">
 				<article className="text-[11px] opacity-60 font-bold">
 					Active Models
