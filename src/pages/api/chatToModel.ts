@@ -3,7 +3,7 @@ import { getToken } from "next-auth/jwt"
 import ollama, { Message } from "ollama"
 
 export const config = {
-	maxDuration: 60,
+	maxDuration: 120,
 }
 
 type ModelType =
