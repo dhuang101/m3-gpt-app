@@ -18,7 +18,9 @@ type AvailableModels =
 	| "medgemma-1.0-4b"
 	| "medgemma-1.0-27b"
 	| "medllama-3-8b"
-	| "lingshu-1.0-32b"
+	| "lingshu-7b"
+	| "hulu-med-30b"
+	| "medix-r1-30b"
 
 function ChatPage() {
 	const { data: session } = useSession()

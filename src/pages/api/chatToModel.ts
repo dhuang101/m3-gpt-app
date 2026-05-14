@@ -11,7 +11,9 @@ type ModelType =
 	| "medgemma-1.0-4b"
 	| "medgemma-1.0-27b"
 	| "medllama-3-8b"
-	| "lingshu-1.0-32b"
+	| "lingshu-7b"
+	| "hulu-med-30b"
+	| "medix-r1-30b"
 
 interface ModelOptions {
 	stop: string[]
@@ -69,7 +71,29 @@ const MODEL_REGISTRY: ModelRegistry = {
 			num_ctx: 16384,
 		},
 	},
-	"lingshu-1.0-32b": {
+	"lingshu-7b": {
+		options: {
+			stop: [
+				"<|im_start|>",
+				"<|im_end|>",
+				"<|object_ref_start|>",
+				"<|object_ref_end|>",
+			],
+			num_ctx: 8192,
+		},
+	},
+	"hulu-med-30b": {
+		options: {
+			stop: [
+				"<|im_start|>",
+				"<|im_end|>",
+				"<|object_ref_start|>",
+				"<|object_ref_end|>",
+			],
+			num_ctx: 16384,
+		},
+	},
+	"medix-r1-30b": {
 		options: {
 			stop: [
 				"<|im_start|>",

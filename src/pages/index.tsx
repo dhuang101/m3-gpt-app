@@ -27,10 +27,22 @@ const MODELS = [
 		hasImageSupport: false,
 	},
 	{
-		name: "Lingshu 1.0 32B",
-		hfUrl: "https://huggingface.co/lingshu-medical-mllm/Lingshu-32B",
-		dateAdded: "2026-05-13",
-		hasImageSupport: false,
+		name: "Lingshu 7B",
+		hfUrl: "https://huggingface.co/lingshu-medical-mllm/Lingshu-7B",
+		dateAdded: "2026-05-14",
+		hasImageSupport: true,
+	},
+	{
+		name: "Hulu-Med 30B",
+		hfUrl: "https://huggingface.co/ZJU-AI4H/Hulu-Med-30A3",
+		dateAdded: "2026-05-14",
+		hasImageSupport: true,
+	},
+	{
+		name: "MediX R1 30B",
+		hfUrl: "https://huggingface.co/MBZUAI/MediX-R1-30B",
+		dateAdded: "2026-05-14",
+		hasImageSupport: true,
 	},
 ]
 

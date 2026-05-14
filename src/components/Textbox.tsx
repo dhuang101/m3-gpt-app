@@ -8,7 +8,9 @@ const MODEL_NAMES = {
 	"medgemma-1.0-4b": "MedGemma 1.0 (4b)",
 	"medgemma-1.0-27b": "MedGemma 1.0 (27b)",
 	"medllama-3-8b": "MedLlama 3 (8b)",
-	"lingshu-1.0-32b": "Lingshu 1.0 (32b)",
+	"lingshu-7b": "Lingshu (7b)",
+	"hulu-med-30b": "Hulu-Med (30b)",
+	"medix-r1-30b": "MediX R1 (30b)",
 }
 
 interface PropsType {
@@ -20,14 +22,18 @@ interface PropsType {
 		| "medgemma-1.0-4b"
 		| "medgemma-1.0-27b"
 		| "medllama-3-8b"
-		| "lingshu-1.0-32b"
+		| "lingshu-7b"
+		| "hulu-med-30b"
+		| "medix-r1-30b"
 	setSelectedModel: React.Dispatch<
 		React.SetStateAction<
 			| "medgemma-1.5-4b"
 			| "medgemma-1.0-4b"
 			| "medgemma-1.0-27b"
 			| "medllama-3-8b"
-			| "lingshu-1.0-32b"
+			| "lingshu-7b"
+			| "hulu-med-30b"
+			| "medix-r1-30b"
 		>
 	>
 	selectedImage: string | null
@@ -64,7 +70,9 @@ function TextBox({
 			| "medgemma-1.0-4b"
 			| "medgemma-1.0-27b"
 			| "medllama-3-8b"
-			| "lingshu-1.0-32b"
+			| "lingshu-7b"
+			| "hulu-med-30b"
+			| "medix-r1-30b"
 		if (!value.includes("medgemma") && selectedImage) {
 			clearImage()
 		}
@@ -176,8 +184,14 @@ function TextBox({
 								<option value="medllama-3-8b">
 									MedLlama-3-8B-v2.0-Q4_K_M
 								</option>
-								<option value="lingshu-1.0-32b">
-									Lingshu-32B.i1-Q4_K_M
+								<option value="lingshu-7b">
+									Lingshu-7B.i1-Q4_K_M
+								</option>
+								<option value="hulu-med-30b">
+									Hulu-Med-30A3.i1-Q4_K_M
+								</option>
+								<option value="medix-r1-30b">
+									MediX-R1-30B.i1-Q4_K_M
 								</option>
 							</select>
 						)}
