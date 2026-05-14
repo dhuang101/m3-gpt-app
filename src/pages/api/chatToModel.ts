@@ -30,33 +30,24 @@ const MODEL_REGISTRY: ModelRegistry = {
 	"medgemma-1.5-4b": {
 		options: {
 			stop: [
-				"<|im_start|>user",
-				"<|im_start|>system",
+				"<|turn|>",
+				"<turn|>",
 				"<|im_end|>",
 				"<end_of_turn>",
+				"<|file_separator|>",
 			],
-			num_ctx: 16384,
+			num_ctx: 32768,
 		},
 	},
 	"medgemma-1.0-4b": {
 		options: {
-			stop: [
-				"<|im_start|>user",
-				"<|im_start|>system",
-				"<|im_end|>",
-				"<end_of_turn>",
-			],
+			stop: ["<start_of_turn>", "<end_of_turn>", "<|im_end|>"],
 			num_ctx: 8192,
 		},
 	},
 	"medgemma-1.0-27b": {
 		options: {
-			stop: [
-				"<|im_start|>user",
-				"<|im_start|>system",
-				"<|im_end|>",
-				"<end_of_turn>",
-			],
+			stop: ["<start_of_turn>", "<end_of_turn>", "<|im_end|>"],
 			num_ctx: 16384,
 		},
 	},
@@ -78,18 +69,14 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<|im_end|>",
 				"<|object_ref_start|>",
 				"<|object_ref_end|>",
+				"<|endoftext|>",
 			],
-			num_ctx: 8192,
+			num_ctx: 32768,
 		},
 	},
 	"hulu-med-30b": {
 		options: {
-			stop: [
-				"<|im_start|>",
-				"<|im_end|>",
-				"<|object_ref_start|>",
-				"<|object_ref_end|>",
-			],
+			stop: ["<|im_start|>", "<|im_end|>", "USER:", "ASSISTANT:"],
 			num_ctx: 16384,
 		},
 	},
@@ -98,10 +85,11 @@ const MODEL_REGISTRY: ModelRegistry = {
 			stop: [
 				"<|im_start|>",
 				"<|im_end|>",
-				"<|object_ref_start|>",
-				"<|object_ref_end|>",
+				"</thought>",
+				"<|endoftext|>",
+				"User:",
 			],
-			num_ctx: 16384,
+			num_ctx: 32768,
 		},
 	},
 }
