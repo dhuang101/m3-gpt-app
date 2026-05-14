@@ -1,8 +1,5 @@
 import React, { useRef } from "react"
 
-{
-	/* Required Change: add the new model here */
-}
 const MODEL_NAMES = {
 	"medgemma-1.5-4b": "MedGemma 1.5 (4b)",
 	"medgemma-1.0-4b": "MedGemma 1.0 (4b)",
@@ -13,29 +10,14 @@ const MODEL_NAMES = {
 	"medix-r1-30b": "MediX R1 (30b)",
 }
 
+type ModelType = keyof typeof MODEL_NAMES
+
 interface PropsType {
 	handleKeyDown: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void
 	input: string
 	setInput: React.Dispatch<React.SetStateAction<string>>
-	selectedModel:
-		| "medgemma-1.5-4b"
-		| "medgemma-1.0-4b"
-		| "medgemma-1.0-27b"
-		| "medllama-3-8b"
-		| "lingshu-7b"
-		| "hulu-med-30b"
-		| "medix-r1-30b"
-	setSelectedModel: React.Dispatch<
-		React.SetStateAction<
-			| "medgemma-1.5-4b"
-			| "medgemma-1.0-4b"
-			| "medgemma-1.0-27b"
-			| "medllama-3-8b"
-			| "lingshu-7b"
-			| "hulu-med-30b"
-			| "medix-r1-30b"
-		>
-	>
+	selectedModel: ModelType
+	setSelectedModel: React.Dispatch<React.SetStateAction<ModelType>>
 	selectedImage: string | null
 	onImageUpload: (file: File) => void
 	clearImage: () => void
@@ -54,7 +36,8 @@ function TextBox({
 	isChatting,
 }: PropsType) {
 	const fileInputRef = useRef<HTMLInputElement>(null)
-	const isVisionSupported = selectedModel.includes("medgemma")
+
+	const isVisionSupported = !selectedModel.includes("medllama")
 
 	function handleInput(event: React.ChangeEvent<HTMLTextAreaElement>) {
 		const element = event.target
@@ -64,16 +47,9 @@ function TextBox({
 	}
 
 	function handleSelectChange(event: React.ChangeEvent<HTMLSelectElement>) {
-		// Required Change: add new model's name here
-		const value = event.target.value as
-			| "medgemma-1.5-4b"
-			| "medgemma-1.0-4b"
-			| "medgemma-1.0-27b"
-			| "medllama-3-8b"
-			| "lingshu-7b"
-			| "hulu-med-30b"
-			| "medix-r1-30b"
-		if (!value.includes("medgemma") && selectedImage) {
+		const value = event.target.value as ModelType
+
+		if (value.includes("medllama") && selectedImage) {
 			clearImage()
 		}
 
@@ -171,7 +147,6 @@ function TextBox({
 								value={selectedModel}
 								onChange={handleSelectChange}
 							>
-								{/* Required Change: add the new model here, this is the dropdown where it will be selected*/}
 								<option value="medgemma-1.5-4b">
 									MedGemma-1.5-4b-it-Q4_K_M
 								</option>
