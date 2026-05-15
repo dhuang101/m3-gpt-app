@@ -28,12 +28,10 @@ const MODEL_REGISTRY: ModelRegistry = {
 	"medgemma-1.5-4b": {
 		options: {
 			stop: [
-				"<start_of_turn>",
-				"<end_of_turn>",
-				"<unused94>",
-				"<unused95>",
+				"<|im_start|>user",
+				"<|im_start|>system",
 				"<|im_end|>",
-				"<|file_separator|>",
+				"<end_of_turn>",
 			],
 			num_ctx: 32768,
 		},
