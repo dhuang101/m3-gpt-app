@@ -65,6 +65,7 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<|end_header_id|>",
 				"<|eot_id|>",
 				"<|reserved_special_token",
+				"Assistant:",
 			],
 			num_ctx: 16384,
 		},
