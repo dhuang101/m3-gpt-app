@@ -41,13 +41,23 @@ const MODEL_REGISTRY: ModelRegistry = {
 	},
 	"medgemma-1.0-4b": {
 		options: {
-			stop: ["<start_of_turn>", "<end_of_turn>", "<|im_end|>"],
+			stop: [
+				"<start_of_turn>",
+				"<end_of_turn>",
+				"<|im_end|>",
+				"<|file_separator|>",
+			],
 			num_ctx: 8192,
 		},
 	},
 	"medgemma-1.0-27b": {
 		options: {
-			stop: ["<start_of_turn>", "<end_of_turn>", "<|im_end|>"],
+			stop: [
+				"<start_of_turn>",
+				"<end_of_turn>",
+				"<|im_end|>",
+				"<|file_separator|>",
+			],
 			num_ctx: 16384,
 		},
 	},
@@ -77,7 +87,7 @@ const MODEL_REGISTRY: ModelRegistry = {
 	"hulu-med-30b": {
 		options: {
 			stop: ["<|im_start|>", "<|im_end|>", "USER:", "ASSISTANT:"],
-			num_ctx: 16384,
+			num_ctx: 8192,
 		},
 	},
 	"medix-r1-30b": {
@@ -89,7 +99,7 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<|endoftext|>",
 				"User:",
 			],
-			num_ctx: 32768,
+			num_ctx: 8192,
 		},
 	},
 }
