@@ -12,8 +12,6 @@ type ModelType =
 	| "medgemma-1.0-27b"
 	| "medllama-3-8b"
 	| "lingshu-7b"
-	| "hulu-med-30b"
-	| "medix-r1-30b"
 
 interface ModelOptions {
 	stop: string[]
@@ -30,10 +28,9 @@ const MODEL_REGISTRY: ModelRegistry = {
 	"medgemma-1.5-4b": {
 		options: {
 			stop: [
-				"<|turn|>",
-				"<turn|>",
-				"<|im_end|>",
+				"<start_of_turn>",
 				"<end_of_turn>",
+				"<|im_end|>",
 				"<|file_separator|>",
 			],
 			num_ctx: 32768,
@@ -82,24 +79,6 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<|endoftext|>",
 			],
 			num_ctx: 32768,
-		},
-	},
-	"hulu-med-30b": {
-		options: {
-			stop: ["<|im_start|>", "<|im_end|>", "USER:", "ASSISTANT:"],
-			num_ctx: 8192,
-		},
-	},
-	"medix-r1-30b": {
-		options: {
-			stop: [
-				"<|im_start|>",
-				"<|im_end|>",
-				"</thought>",
-				"<|endoftext|>",
-				"User:",
-			],
-			num_ctx: 8192,
 		},
 	},
 }
