@@ -30,6 +30,7 @@ const MODEL_REGISTRY: ModelRegistry = {
 			stop: [
 				"<start_of_turn>",
 				"<end_of_turn>",
+				"<unused94>",
 				"<unused95>",
 				"<|im_end|>",
 				"<|file_separator|>",
