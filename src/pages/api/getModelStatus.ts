@@ -4,20 +4,27 @@ import ollama from "ollama"
 
 async function GetModelStatus() {
 	try {
-		const status = await ollama.ps()
-		const isBusy = status.models.length > 0
+		const response = await fetch(`http://localhost:8080/models`)
+		if (!response.ok) throw new Error("Failed to query models")
+
+		const data = await response.json()
+
+		const loadedModels = data.models.filter(
+			(m: any) => m.status === "loaded",
+		)
+		const isBusy = loadedModels.length > 0
 
 		return {
 			busy: isBusy,
-			details: status.models.map((model) => ({
-				name: model.name,
-				size: model.size,
-				expiresAt: model.expires_at, // Tells you when it will auto-unload
+			details: loadedModels.map((model: any) => ({
+				name: model.id,
+				size: model.meta?.size || "Unknown",
+				expiresAt: model.expires_at || "Dynamic Eviction",
 			})),
 		}
 	} catch (error) {
-		console.error("Failed to reach Ollama:", error)
-		return { busy: false, error: "Ollama offline" }
+		console.error("Failed to reach llama.cpp router:", error)
+		return { busy: false, error: "llama.cpp router offline" }
 	}
 }
 
