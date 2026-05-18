@@ -83,6 +83,8 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<|start_header_id|>",
 				"<|end_header_id|>",
 				"<|eot_id|>",
+				"<|im_end|>",
+				"<|endoftext|>",
 				"Assistant:",
 			],
 		},
