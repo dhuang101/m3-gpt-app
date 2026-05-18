@@ -66,7 +66,7 @@ function TextBox({
 				{selectedImage && (
 					<div className="relative self-start m-2 group">
 						<img
-							src={`data:image/jpeg;base64,${selectedImage}`}
+							src={selectedImage}
 							alt="Preview"
 							className="w-20 h-20 object-cover rounded-xl border border-base-content/20"
 						/>
