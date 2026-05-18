@@ -90,7 +90,7 @@ function HomePage() {
 
 				<div className="bg-base-200 p-4 rounded-2xl border border-base-300">
 					<h3 className="text-md font-bold ml-1 mb-3 opacity-50 ">
-						Available Models
+						Learn More About the Available Models
 					</h3>
 					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
 						{MODELS.map((model, idx) => (
