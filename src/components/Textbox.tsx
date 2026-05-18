@@ -7,7 +7,7 @@ const MODEL_NAMES = {
 	"medllama-3-8b": "MedLlama 3 (8b)",
 	"lingshu-7b": "Lingshu (7b)",
 	"hulu-med-30b": "Hulu-Med (30b)",
-	"medix-r1-30b": "Medix-R1 (30b)",
+	"medix-r1-30b": "MediX-R1 (30b)",
 }
 
 type ModelType = keyof typeof MODEL_NAMES
