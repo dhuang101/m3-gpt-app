@@ -32,6 +32,18 @@ const MODELS = [
 		dateAdded: "2026-05-14",
 		hasImageSupport: true,
 	},
+	{
+		name: "Hulu-Med 30B",
+		hfUrl: "https://huggingface.co/ZJU-AI4H/Hulu-Med-30A3",
+		dateAdded: "2026-05-14",
+		hasImageSupport: true,
+	},
+	{
+		name: "MediX R1 30B",
+		hfUrl: "https://huggingface.co/MBZUAI/MediX-R1-30B",
+		dateAdded: "2026-05-14",
+		hasImageSupport: true,
+	},
 ]
 
 function HomePage() {

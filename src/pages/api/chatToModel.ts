@@ -13,6 +13,8 @@ type ModelType =
 	| "medgemma-1.0-27b"
 	| "medllama-3-8b"
 	| "lingshu-7b"
+	| "hulu-med-30b"
+	| "medix-r1-30b"
 
 interface ModelOptions {
 	stop: string[]
@@ -21,7 +23,6 @@ interface ModelOptions {
 interface ModelRegistry {
 	[key: string]: {
 		options: ModelOptions
-		baseURL: string
 		alias: string
 		parse: (text: string) => ParsedResponse
 	}
@@ -29,7 +30,6 @@ interface ModelRegistry {
 
 const MODEL_REGISTRY: ModelRegistry = {
 	"medgemma-1.5-4b": {
-		baseURL: "http://localhost:8080/v1",
 		alias: "medgemma-1.5-4b",
 		options: {
 			stop: [
@@ -42,7 +42,6 @@ const MODEL_REGISTRY: ModelRegistry = {
 		parse: Parsers.medgemma15,
 	},
 	"medgemma-1.0-27b": {
-		baseURL: "http://localhost:8080/v1",
 		alias: "medgemma-1.0-27b",
 		options: {
 			stop: [
@@ -55,7 +54,6 @@ const MODEL_REGISTRY: ModelRegistry = {
 		parse: Parsers.none,
 	},
 	"medllama-3-8b": {
-		baseURL: "http://localhost:8080/v1",
 		alias: "medllama-3-8b",
 		options: {
 			stop: [
@@ -68,7 +66,6 @@ const MODEL_REGISTRY: ModelRegistry = {
 		parse: Parsers.none,
 	},
 	"lingshu-7b": {
-		baseURL: "http://localhost:8080/v1",
 		alias: "lingshu-7b",
 		options: {
 			stop: [
@@ -76,6 +73,26 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<|im_end|>",
 				"<|object_ref_start|>",
 				"<|endoftext|>",
+			],
+		},
+		parse: Parsers.none,
+	},
+	"hulu-med-30b": {
+		alias: "hulu-med-30b",
+		options: {
+			stop: ["<|im_start|>", "<|im_end|>", "USER:", "ASSISTANT:"],
+		},
+		parse: Parsers.none,
+	},
+	"medix-r1-30b": {
+		alias: "medix-r1-30b",
+		options: {
+			stop: [
+				"<|im_start|>",
+				"<|im_end|>",
+				"</thought>",
+				"<|endoftext|>",
+				"User:",
 			],
 		},
 		parse: Parsers.none,
@@ -106,7 +123,7 @@ async function ChatToModel(params: ParamsType) {
 	}
 
 	const openai = new OpenAI({
-		baseURL: selectedConfig.baseURL,
+		baseURL: "http://localhost:8080/v1",
 		apiKey: "local-no-key-required",
 	})
 
