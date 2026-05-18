@@ -66,11 +66,12 @@ function Navbar() {
 						>
 							<li>
 								<button
-									onClick={() =>
-										signOut({
-											callbackUrl: `${process.env.NEXT_PUBLIC_AUTH0_ISSUER}/v2/logout?client_id=${process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID}&returnTo=${encodeURIComponent("https://chat.m3-gpt.cloud.edu.au/")}`,
+									onClick={async () =>{
+										await signOut({
+											redirect: false
 										})
-									}
+										window.location.href =`${process.env.NEXT_PUBLIC_AUTH0_ISSUER}/v2/logout?client_id=${process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID}&returnTo=${encodeURIComponent("https://chat.m3-gpt.cloud.edu.au/")}`
+									}}
 									className="text-error font-semibold"
 								>
 									Sign Out
