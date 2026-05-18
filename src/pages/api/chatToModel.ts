@@ -24,6 +24,7 @@ interface ModelRegistry {
 	[key: string]: {
 		options: ModelOptions
 		alias: string
+		systemPrompt?: string // Added to support model-specific system prompts
 		parse: (text: string) => ParsedResponse
 	}
 }
@@ -39,6 +40,16 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<end_of_turn>",
 			],
 		},
+		systemPrompt: `You are MedGemma. You must separate your thinking process from your final response using XML tags. 	
+			Do not output anything outside of these tags.
+			
+			Format your output exactly like this:
+			<thinking>
+			[Your internal reasoning goes here]
+			</thinking>
+			<response>
+			[Your final answer goes here]
+			</response>`,
 		parse: Parsers.medgemma15,
 	},
 	"medgemma-1.0-4b": {
@@ -165,6 +176,13 @@ async function ChatToModel(params: ParamsType) {
 			} as OpenAI.Chat.ChatCompletionMessageParam
 		})
 
+	if (selectedConfig.systemPrompt) {
+		formattedMessages.unshift({
+			role: "system",
+			content: selectedConfig.systemPrompt,
+		})
+	}
+
 	const response = await openai.chat.completions.create({
 		model: selectedConfig.alias,
 		messages: formattedMessages,
@@ -175,7 +193,6 @@ async function ChatToModel(params: ParamsType) {
 
 	const rawContent = response.choices[0].message.content || ""
 
-	// Clean parser execution handed off to your external module
 	const { content, reasoning } = selectedConfig.parse(rawContent)
 
 	return {
