@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { getToken } from "next-auth/jwt"
-import ollama from "ollama"
 
 async function GetModelStatus() {
 	try {
