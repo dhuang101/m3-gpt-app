@@ -66,7 +66,11 @@ function Navbar() {
 						>
 							<li>
 								<button
-									onClick={() => signOut()}
+									onClick={() =>
+										signOut({
+											callbackUrl: `${process.env.NEXT_PUBLIC_AUTH0_ISSUER}/v2/logout?client_id=${process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID}&returnTo=${encodeURIComponent("https://chat.m3-gpt.cloud.edu.au/")}`,
+										})
+									}
 									className="text-error font-semibold"
 								>
 									Sign Out
