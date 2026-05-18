@@ -41,6 +41,18 @@ const MODEL_REGISTRY: ModelRegistry = {
 		},
 		parse: Parsers.medgemma15,
 	},
+	"medgemma-1.0-4b": {
+		alias: "medgemma-1.0-4b",
+		options: {
+			stop: [
+				"<start_of_turn>",
+				"<end_of_turn>",
+				"<|im_end|>",
+				"<|file_separator|>",
+			],
+		},
+		parse: Parsers.none,
+	},
 	"medgemma-1.0-27b": {
 		alias: "medgemma-1.0-27b",
 		options: {
