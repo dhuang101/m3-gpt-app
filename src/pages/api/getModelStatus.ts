@@ -1,49 +1,50 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { getToken } from "next-auth/jwt"
+import axios from "axios"
+
+interface LlamaRouterModel {
+	id: string
+	status: { value: string }
+}
 
 async function GetModelStatus() {
 	try {
-		const response = await fetch(`http://localhost:8080/models`)
-		if (!response.ok) throw new Error("Failed to query models")
-
-		const data = await response.json()
-
-		const loadedModels = data.models.filter(
-			(m: any) => m.status === "loaded",
+		const response = await axios.get("http://localhost:8080/models")
+		const modelList: LlamaRouterModel[] = response.data?.data || []
+		const loadedModels = modelList.filter(
+			(model) => model.status.value === "loaded",
 		)
 		const isBusy = loadedModels.length > 0
 
 		return {
 			busy: isBusy,
-			details: loadedModels.map((model: any) => ({
+			details: loadedModels.map((model) => ({
 				name: model.id,
-				size: model.meta?.size || "Unknown",
-				expiresAt: model.expires_at || "Dynamic Eviction",
 			})),
 		}
 	} catch (error) {
-		console.error("Failed to reach llama.cpp router:", error)
+		if (axios.isAxiosError(error)) {
+			console.error("Llama.cpp connection error:", error.message)
+		} else {
+			console.error("Unexpected error:", error)
+		}
+
 		return { busy: false, error: "llama.cpp router offline" }
 	}
 }
 
-// handler for any calls to this endpoint
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse,
 ) {
 	const token = await getToken({ req })
-	if (!token) {
-		return res.status(401).json({
-			error: "Unauthorized: Please sign in to access this resource",
-		})
-	}
+	if (!token) return res.status(401).json({ error: "Unauthorized" })
 
 	try {
 		const results = await GetModelStatus()
 		res.status(200).json(results)
 	} catch (err) {
-		console.error("Error at status :", err)
+		console.error("Error at status endpoint:", err)
 		res.status(500).json({ error: "Internal Server Error" })
 	}
 }
