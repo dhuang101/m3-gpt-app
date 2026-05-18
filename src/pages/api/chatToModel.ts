@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { getToken } from "next-auth/jwt"
 import OpenAI from "openai"
+import { ParsedResponse, Parsers } from "../../../utils/responseParsers"
 
 export const config = {
 	maxDuration: 120,
@@ -15,7 +16,6 @@ type ModelType =
 
 interface ModelOptions {
 	stop: string[]
-	num_ctx: number
 }
 
 interface ModelRegistry {
@@ -23,6 +23,7 @@ interface ModelRegistry {
 		options: ModelOptions
 		baseURL: string
 		alias: string
+		parse: (text: string) => ParsedResponse
 	}
 }
 
@@ -37,8 +38,8 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<|im_end|>",
 				"<end_of_turn>",
 			],
-			num_ctx: 32768,
 		},
+		parse: Parsers.medgemma15,
 	},
 	"medgemma-1.0-4b": {
 		baseURL: "http://localhost:8080/v1",
@@ -50,8 +51,8 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<|im_end|>",
 				"<|file_separator|>",
 			],
-			num_ctx: 8192,
 		},
+		parse: Parsers.none,
 	},
 	"medgemma-1.0-27b": {
 		baseURL: "http://localhost:8080/v1",
@@ -63,8 +64,8 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<|im_end|>",
 				"<|file_separator|>",
 			],
-			num_ctx: 16384,
 		},
+		parse: Parsers.none,
 	},
 	"medllama-3-8b": {
 		baseURL: "http://localhost:8080/v1",
@@ -74,11 +75,10 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<|start_header_id|>",
 				"<|end_header_id|>",
 				"<|eot_id|>",
-				"<|reserved_special_token",
 				"Assistant:",
 			],
-			num_ctx: 16384,
 		},
+		parse: Parsers.none,
 	},
 	"lingshu-7b": {
 		baseURL: "http://localhost:8080/v1",
@@ -88,16 +88,15 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<|im_start|>",
 				"<|im_end|>",
 				"<|object_ref_start|>",
-				"<|object_ref_end|>",
 				"<|endoftext|>",
 			],
-			num_ctx: 8192,
 		},
+		parse: Parsers.none,
 	},
 }
 
 interface IncomingMessage {
-	role: "user" | "assistant"
+	role: "user" | "assistant" | "system"
 	content: string
 	images?: string[]
 }
@@ -143,17 +142,11 @@ async function ChatToModel(params: ParamsType) {
 					],
 				}
 			}
-			if (msg.role === "user") {
-				return {
-					role: "user" as const,
-					content: msg.content,
-				}
-			} else {
-				return {
-					role: "assistant" as const,
-					content: msg.content,
-				}
-			}
+
+			return {
+				role: msg.role,
+				content: msg.content,
+			} as OpenAI.Chat.ChatCompletionMessageParam
 		})
 
 	const response = await openai.chat.completions.create({
@@ -164,9 +157,15 @@ async function ChatToModel(params: ParamsType) {
 		stream: false,
 	})
 
+	const rawContent = response.choices[0].message.content || ""
+
+	// Clean parser execution handed off to your external module
+	const { content, reasoning } = selectedConfig.parse(rawContent)
+
 	return {
 		role: "assistant" as const,
-		content: response.choices[0].message.content || "",
+		content: content,
+		reasoning: reasoning,
 	}
 }
 
