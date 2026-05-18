@@ -7,75 +7,96 @@ export interface ParsedResponse {
 
 export const Parsers = {
 	/**
-	 * Strategy 1: Pass-through (For standard models that don't output CoT text)
+	 * Strategy 1: Pass-through
+	 * For standard models that don't output CoT text at all.
 	 */
 	none: (text: string): ParsedResponse => ({
 		content: text.trim(),
 	}),
 
 	/**
-	 * Strategy 2: HTML/XML Tags (For models using clean boundaries like <think>)
+	 * Strategy 2: Flexible XML/HTML Tags (Highly Robust)
+	 * For models using explicit structural boundaries (like <thinking> or <think>).
+	 * Safely handles situations where the model forgets or cuts off the closing tag.
 	 */
 	tags: (
 		text: string,
-		openTag = "<think>",
-		closeTag = "</think>",
+		openTag = "<thinking>",
+		closeTag = "</thinking>",
 	): ParsedResponse => {
-		if (!text.includes(openTag)) return { content: text.trim() }
+		const trimmed = text.trim()
 
-		const parts = text.split(closeTag)
-		const reasoning = parts[0].replace(openTag, "").trim()
-		const content = parts[1] ? parts[1].trim() : ""
+		// Escape tags safely for Regex
+		const escapedOpen = openTag.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+		const escapedClose = closeTag.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
 
-		return { reasoning, content }
+		// Regex to capture full blocks
+		const fullPattern = new RegExp(
+			`${escapedOpen}([\\s\\S]*?)${escapedClose}([\\s\\S]*)`,
+		)
+		const match = trimmed.match(fullPattern)
+
+		if (match) {
+			return {
+				reasoning: match[1].trim(),
+				content: match[2].trim(),
+			}
+		}
+
+		// Fallback: If the open tag exists but the closing tag was cut off due to token limits
+		if (trimmed.includes(openTag)) {
+			const parts = trimmed.split(openTag)
+			return {
+				reasoning: parts[1] ? parts[1].trim() : "",
+				content: "", // No final response was generated yet
+			}
+		}
+
+		return { content: trimmed }
 	},
 
 	/**
-	 * Strategy 3: Overhauled MedGemma Plaintext Parser
-	 * Built to catch changing headers and extract massive multi-line clinical markdown blocks.
+	 * Strategy 3: Dedicated XML Response Wrapper Parser
+	 * Specifically built for your new MedGemma 1.5 prompt that outputs <thinking> and <response>
 	 */
 	medgemma15: (text: string): ParsedResponse => {
 		const trimmed = text.trim()
 
-		if (!trimmed.toLowerCase().startsWith("thought")) {
-			return { content: trimmed }
+		// 1. Check for our explicit new XML <response> structure first
+		const responseMatch = trimmed.match(
+			/<response>([\s\\S]*?)<\/response>/i,
+		)
+		const thinkingMatch = trimmed.match(
+			/<thinking>([\s\\S]*?)<\/thinking>/i,
+		)
+
+		if (responseMatch) {
+			return {
+				reasoning: thinkingMatch ? thinkingMatch[1].trim() : undefined,
+				content: responseMatch[1].trim(),
+			}
 		}
 
-		let cleanText = trimmed.replace(/^thought\s*\n/i, "").trim()
-
-		const responseMarkers = [
-			/(\.|\n)\s*(Based on the image)/i,
-			/(\.|\n)\s*(Based on the provided)/i,
-			/(\.|\n)\s*(Based on the clinical)/i,
-			/(\.|\n)\s*(Based on the case)/i,
-			/(\.|\n)\s*(The provided image)/i,
-			/(\.|\n)\s*(The image shows)/i,
-			/(\.|\n)\s*(Hello!)/i,
-			/(\.|\n)\s*(Hi there!)/i,
-		]
-
-		for (const marker of responseMarkers) {
-			const match = cleanText.match(marker)
-			if (match && match.index !== undefined) {
-				const markerPrefixLength = match[0].length - match[2].length
-				const splitIndex = match.index + markerPrefixLength
-
+		// 2. Legacy Fallback: If the model fell back to raw text with headers
+		if (/thinking|thought/i.test(trimmed.slice(0, 50))) {
+			// Find common boundaries where "Final Response" style text breaks away
+			const legacyMarker = trimmed.match(
+				/(Final Output:|Response:|<response>|Hello!|Based on the)/i,
+			)
+			if (legacyMarker && legacyMarker.index !== undefined) {
 				return {
-					reasoning: cleanText.substring(0, splitIndex).trim(),
-					content: cleanText.substring(splitIndex).trim(),
+					reasoning: trimmed
+						.substring(0, legacyMarker.index)
+						.replace(/^(thought|thinking process):?/i, "")
+						.trim(),
+					content: trimmed
+						.substring(legacyMarker.index)
+						.replace(/^[^\s]+:\s*/i, "")
+						.trim(),
 				}
 			}
 		}
 
-		const gluedSentenceMatch = cleanText.match(/\.([A-Z][A-Za-z\s]{15,})/)
-		if (gluedSentenceMatch && gluedSentenceMatch.index !== undefined) {
-			const splitIndex = gluedSentenceMatch.index + 1 // Split directly after the period
-			return {
-				reasoning: cleanText.substring(0, splitIndex).trim(),
-				content: cleanText.substring(splitIndex).trim(),
-			}
-		}
-
-		return { content: cleanText }
+		return { content: trimmed }
 	},
 }

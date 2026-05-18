@@ -42,7 +42,7 @@ const MODEL_REGISTRY: ModelRegistry = {
 		},
 		systemPrompt: `You are MedGemma. You must separate your thinking process from your final response using XML tags. 	
 			Do not output anything outside of these tags.
-			
+
 			Format your output exactly like this:
 			<thinking>
 			[Your internal reasoning goes here]
@@ -118,7 +118,7 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"User:",
 			],
 		},
-		parse: Parsers.none,
+		parse: (text) => Parsers.tags(text, "<think>", "</thought>"),
 	},
 }
 
