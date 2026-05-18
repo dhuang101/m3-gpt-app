@@ -26,11 +26,9 @@ export const Parsers = {
 	): ParsedResponse => {
 		const trimmed = text.trim()
 
-		// Escape tags safely for Regex
 		const escapedOpen = openTag.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
 		const escapedClose = closeTag.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
 
-		// Regex to capture full blocks
 		const fullPattern = new RegExp(
 			`${escapedOpen}([\\s\\S]*?)${escapedClose}([\\s\\S]*)`,
 		)
@@ -43,12 +41,11 @@ export const Parsers = {
 			}
 		}
 
-		// Fallback: If the open tag exists but the closing tag was cut off due to token limits
 		if (trimmed.includes(openTag)) {
 			const parts = trimmed.split(openTag)
 			return {
 				reasoning: parts[1] ? parts[1].trim() : "",
-				content: "", // No final response was generated yet
+				content: "",
 			}
 		}
 
@@ -56,44 +53,54 @@ export const Parsers = {
 	},
 
 	/**
-	 * Strategy 3: Dedicated XML Response Wrapper Parser
-	 * Specifically built for your new MedGemma 1.5 prompt that outputs <thinking> and <response>
+	 * Strategy 3: MedGemma XML Parser
+	 * Handles pre-text leaks, nested markdown code blocks, and cleans up residual tags.
 	 */
 	medgemma15: (text: string): ParsedResponse => {
 		const trimmed = text.trim()
 
-		// 1. Check for our explicit new XML <response> structure first
-		const responseMatch = trimmed.match(
-			/<response>([\s\\S]*?)<\/response>/i,
-		)
-		const thinkingMatch = trimmed.match(
-			/<thinking>([\s\\S]*?)<\/thinking>/i,
-		)
+		// 1. Surgical strike regex to look for <response> anywhere in the string,
+		// even inside markdown code blocks or behind random prose text.
+		const responseMatch = trimmed.match(/<response>([\s\S]*?)<\/response>/i)
+		const thinkingMatch = trimmed.match(/<thinking>([\s\S]*?)<\/thinking>/i)
 
 		if (responseMatch) {
+			let content = responseMatch[1].trim()
+			let reasoning = thinkingMatch ? thinkingMatch[1].trim() : undefined
+
+			// If no clean <thinking> block was extracted but there was random junk text
+			// BEFORE the <response> tag, treat that junk text as the reasoning trail.
+			if (!reasoning && trimmed.toLowerCase().includes("<response>")) {
+				const parts = trimmed.split(/<response>/i)
+				// Clean up any stray code blocks or markdown artifacts from the junk text
+				reasoning = parts[0]
+					.replace(/```xml|```/g, "")
+					.replace(/<thinking>/i, "")
+					.trim()
+			}
+
+			// Quick sanitation check: clean out any stray backticks that leaked into the content block
+			content = content.replace(/```/g, "").trim()
+
 			return {
-				reasoning: thinkingMatch ? thinkingMatch[1].trim() : undefined,
-				content: responseMatch[1].trim(),
+				reasoning: reasoning || undefined,
+				content: content,
 			}
 		}
 
-		// 2. Legacy Fallback: If the model fell back to raw text with headers
-		if (/thinking|thought/i.test(trimmed.slice(0, 50))) {
-			// Find common boundaries where "Final Response" style text breaks away
-			const legacyMarker = trimmed.match(
-				/(Final Output:|Response:|<response>|Hello!|Based on the)/i,
-			)
-			if (legacyMarker && legacyMarker.index !== undefined) {
-				return {
-					reasoning: trimmed
-						.substring(0, legacyMarker.index)
-						.replace(/^(thought|thinking process):?/i, "")
-						.trim(),
-					content: trimmed
-						.substring(legacyMarker.index)
-						.replace(/^[^\s]+:\s*/i, "")
-						.trim(),
-				}
+		const legacyMarker = trimmed.match(
+			/(Final Output:|Response:|Hello!|Based on the)/i,
+		)
+		if (legacyMarker && legacyMarker.index !== undefined) {
+			return {
+				reasoning: trimmed
+					.substring(0, legacyMarker.index)
+					.replace(/^(thought|thinking process):?/i, "")
+					.trim(),
+				content: trimmed
+					.substring(legacyMarker.index)
+					.replace(/^[^\s]+:\s*/i, "")
+					.trim(),
 			}
 		}
 
