@@ -1,7 +1,7 @@
 import { ChatResponse } from "@/components/ChatResponse"
 import TextBox from "@/components/Textbox"
 import axios from "axios"
-import React, { useState } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import { useSession, signOut } from "next-auth/react"
 import useSWR from "swr"
 import ModelStatusCard from "@/components/ModelStatusCard"
@@ -25,6 +25,8 @@ type AvailableModels =
 function ChatPage() {
 	const { data: session } = useSession()
 
+	const messagesEndRef = useRef<HTMLDivElement | null>(null)
+
 	const [selectedModel, setSelectedModel] =
 		useState<AvailableModels>("medgemma-1.5-4b")
 	const [input, setInput] = useState("")
@@ -42,6 +44,10 @@ function ChatPage() {
 		},
 	)
 	const activeCount = status?.details?.length || 0
+
+	useEffect(() => {
+		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+	}, [messages, loading])
 
 	const convertToBase64 = (file: File): Promise<string> => {
 		return new Promise((resolve, reject) => {
@@ -209,6 +215,8 @@ function ChatPage() {
 								</button>
 							</div>
 						)}
+
+						<div ref={messagesEndRef} />
 					</div>
 
 					<TextBox
