@@ -30,7 +30,7 @@ interface ModelRegistry {
 const MODEL_REGISTRY: ModelRegistry = {
 	"medgemma-1.5-4b": {
 		baseURL: "http://localhost:8080/v1",
-		alias: "medgemma-1.5",
+		alias: "medgemma-1.5-4b",
 		options: {
 			stop: [
 				"<|im_start|>user",
@@ -40,19 +40,6 @@ const MODEL_REGISTRY: ModelRegistry = {
 			],
 		},
 		parse: Parsers.medgemma15,
-	},
-	"medgemma-1.0-4b": {
-		baseURL: "http://localhost:8080/v1",
-		alias: "medgemma-1.0-4b",
-		options: {
-			stop: [
-				"<start_of_turn>",
-				"<end_of_turn>",
-				"<|im_end|>",
-				"<|file_separator|>",
-			],
-		},
-		parse: Parsers.none,
 	},
 	"medgemma-1.0-27b": {
 		baseURL: "http://localhost:8080/v1",
@@ -69,7 +56,7 @@ const MODEL_REGISTRY: ModelRegistry = {
 	},
 	"medllama-3-8b": {
 		baseURL: "http://localhost:8080/v1",
-		alias: "medllama-3",
+		alias: "medllama-3-8b",
 		options: {
 			stop: [
 				"<|start_header_id|>",
@@ -82,7 +69,7 @@ const MODEL_REGISTRY: ModelRegistry = {
 	},
 	"lingshu-7b": {
 		baseURL: "http://localhost:8080/v1",
-		alias: "lingshu-vision",
+		alias: "lingshu-7b",
 		options: {
 			stop: [
 				"<|im_start|>",
