@@ -28,7 +28,7 @@ function ChatPage() {
 	const [input, setInput] = useState("")
 	const [messages, setMessages] = useState<ChatMessage[]>([])
 	const [loading, setLoading] = useState(false)
-	const [error, setError] = useState<string | null>("test error")
+	const [error, setError] = useState<string | null>(null)
 	const [selectedImage, setSelectedImage] = useState<string | null>(null)
 
 	const { data: status } = useSWR(
@@ -46,7 +46,7 @@ function ChatPage() {
 			const reader = new FileReader()
 			reader.readAsDataURL(file)
 			reader.onload = () => {
-				const base64String = (reader.result as string).split(",")[1]
+				const base64String = reader.result as string
 				resolve(base64String)
 			}
 			reader.onerror = (error) => reject(error)
@@ -132,7 +132,7 @@ function ChatPage() {
 								{message.images &&
 									message.images.length > 0 && (
 										<img
-											src={`data:image/jpeg;base64,${message.images[0]}`}
+											src={message.images[0]}
 											alt="Uploaded context"
 											className="max-w-xs rounded-lg mb-2 border border-base-content/10"
 										/>

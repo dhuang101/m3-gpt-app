@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { getToken } from "next-auth/jwt"
-import ollama, { Message } from "ollama"
+import OpenAI from "openai"
 
 export const config = {
 	maxDuration: 120,
@@ -21,11 +21,15 @@ interface ModelOptions {
 interface ModelRegistry {
 	[key: string]: {
 		options: ModelOptions
+		baseURL: string
+		alias: string
 	}
 }
 
 const MODEL_REGISTRY: ModelRegistry = {
 	"medgemma-1.5-4b": {
+		baseURL: "http://localhost:8080/v1",
+		alias: "medgemma-1.5",
 		options: {
 			stop: [
 				"<|im_start|>user",
@@ -37,6 +41,8 @@ const MODEL_REGISTRY: ModelRegistry = {
 		},
 	},
 	"medgemma-1.0-4b": {
+		baseURL: "http://localhost:8080/v1",
+		alias: "medgemma-1.0-4b",
 		options: {
 			stop: [
 				"<start_of_turn>",
@@ -48,6 +54,8 @@ const MODEL_REGISTRY: ModelRegistry = {
 		},
 	},
 	"medgemma-1.0-27b": {
+		baseURL: "http://localhost:8080/v1",
+		alias: "medgemma-1.0-27b",
 		options: {
 			stop: [
 				"<start_of_turn>",
@@ -59,6 +67,8 @@ const MODEL_REGISTRY: ModelRegistry = {
 		},
 	},
 	"medllama-3-8b": {
+		baseURL: "http://localhost:8080/v1",
+		alias: "medllama-3",
 		options: {
 			stop: [
 				"<|start_header_id|>",
@@ -71,6 +81,8 @@ const MODEL_REGISTRY: ModelRegistry = {
 		},
 	},
 	"lingshu-7b": {
+		baseURL: "http://localhost:8080/v1",
+		alias: "lingshu-vision",
 		options: {
 			stop: [
 				"<|im_start|>",
@@ -79,13 +91,19 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<|object_ref_end|>",
 				"<|endoftext|>",
 			],
-			num_ctx: 32768,
+			num_ctx: 8192,
 		},
 	},
 }
 
+interface IncomingMessage {
+	role: "user" | "assistant"
+	content: string
+	images?: string[]
+}
+
 interface ParamsType {
-	messages: (Message & { images?: string[] })[]
+	messages: IncomingMessage[]
 	model: ModelType
 }
 
@@ -101,15 +119,55 @@ async function ChatToModel(params: ParamsType) {
 		throw new Error("No messages provided")
 	}
 
-	return await ollama.chat({
-		model: selectedModel,
-		messages: params.messages,
-		stream: false,
-		keep_alive: "5m",
-		options: {
-			...selectedConfig.options,
-		},
+	const openai = new OpenAI({
+		baseURL: selectedConfig.baseURL,
+		apiKey: "local-no-key-required",
 	})
+
+	const formattedMessages: OpenAI.Chat.ChatCompletionMessageParam[] =
+		params.messages.map((msg) => {
+			if (msg.images && msg.images.length > 0) {
+				return {
+					role: "user" as const,
+					content: [
+						{
+							type: "text" as const,
+							text: msg.content,
+						},
+						{
+							type: "image_url" as const,
+							image_url: {
+								url: msg.images[0],
+							},
+						},
+					],
+				}
+			}
+			if (msg.role === "user") {
+				return {
+					role: "user" as const,
+					content: msg.content,
+				}
+			} else {
+				return {
+					role: "assistant" as const,
+					content: msg.content,
+				}
+			}
+		})
+
+	const response = await openai.chat.completions.create({
+		model: selectedConfig.alias,
+		messages: formattedMessages,
+		stop: selectedConfig.options.stop,
+		max_tokens: 2048,
+		stream: false,
+	})
+
+	return {
+		role: "assistant" as const,
+		content: response.choices[0].message.content || "",
+	}
 }
 
 export default async function handler(
@@ -130,10 +188,10 @@ export default async function handler(
 	const params = req.body as ParamsType
 
 	try {
-		const results = await ChatToModel(params)
-		res.status(200).json(results.message)
-	} catch (err) {
-		console.error("Error at chat :", err)
-		res.status(500).json({ error: "Internal Server Error" })
+		const assistantMessage = await ChatToModel(params)
+		res.status(200).json(assistantMessage)
+	} catch (err: any) {
+		console.error("Error with OpenAI SDK route processing:", err)
+		res.status(500).json({ error: err?.message || "Internal Server Error" })
 	}
 }
