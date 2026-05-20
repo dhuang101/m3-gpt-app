@@ -24,7 +24,7 @@ to manage your versions of node.
 | **Language**       | [TypeScript](https://www.typescriptlang.org/) |
 | **Styling**        | [Tailwind CSS](https://tailwindcss.com/) / [DaisyUI](https://daisyui.com/) |
 | **Auth**           | [NextAuth.js](https://next-auth.js.org/) |
-| **LLM Host**           | [Ollama](https://ollama.com/) |
+| **Model Runner**           | [llama.cpp](https://github.com/ggml-org/llama.cpp) |
 
 ## Getting Started
 
