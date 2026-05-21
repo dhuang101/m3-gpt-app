@@ -40,16 +40,16 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<end_of_turn>",
 			],
 		},
-		systemPrompt: `You are MedGemma. You must separate your thinking process from your final response using XML tags. 	
-			Do not output anything outside of these tags.
+		systemPrompt: `You are MedGemma. You must separate your thinking process from your final response using XML tags.   
+            Do not output anything outside of these tags.
 
-			Format your output exactly like this:
-			<thinking>
-			[Your internal reasoning goes here]
-			</thinking>
-			<response>
-			[Your final answer goes here]
-			</response>`,
+            Format your output exactly like this:
+            <thinking>
+            [Your internal reasoning goes here]
+            </thinking>
+            <response>
+            [Your final answer goes here]
+            </response>`,
 		parse: Parsers.medgemma15,
 	},
 	"medgemma-1.0-4b": {
@@ -62,6 +62,9 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<|file_separator|>",
 			],
 		},
+		systemPrompt: `You are MedGemma, a helpful and accurate medical AI assistant. Provide safe, evidence-based, and 
+		objective clinical insights while maintaining a professional and empathetic tone. Always emphasize the importance 
+		of professional medical consultation when relevant.`,
 		parse: Parsers.none,
 	},
 	"medgemma-1.0-27b": {
@@ -74,6 +77,9 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<|file_separator|>",
 			],
 		},
+		systemPrompt: `You are an advanced clinical variant of MedGemma. Leverage your extensive medical knowledge base to 
+		analyze clinical inputs, symptoms, or complex health queries. Deliver highly detailed, evidence-based medical information,
+		 diagnostic considerations, and rigorous clinical guidance while maintaining strict safety standards.`,
 		parse: Parsers.none,
 	},
 	"medllama-3-8b": {
@@ -88,6 +94,9 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"Assistant:",
 			],
 		},
+		systemPrompt: `You are MedLlama, a professional medical AI assistant based on the Llama architecture. 
+		Your objective is to assist users and healthcare practitioners with high-quality, precise, and scientifically accurate 
+		medical insights. Keep your responses structured, objective, and strictly focused on patient safety and clinical accuracy.`,
 		parse: Parsers.none,
 	},
 	"lingshu-7b": {
@@ -100,6 +109,9 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"<|endoftext|>",
 			],
 		},
+		systemPrompt: `You are Lingshu, a generalist medical understanding and reasoning AI. Provide highly accurate evaluations 
+		of clinical queries, patient symptoms, and medical data. Focus on creating well-structured clinical explanations, precise answers,
+		and comprehensive medical text interpretations.`,
 		parse: Parsers.none,
 	},
 	"hulu-med-30b": {
@@ -107,6 +119,9 @@ const MODEL_REGISTRY: ModelRegistry = {
 		options: {
 			stop: ["<|im_start|>", "<|im_end|>", "USER:", "ASSISTANT:"],
 		},
+		systemPrompt: `You are Hulu-Med, an expert-level generalist model designed for holistic medical reasoning across complex anatomical
+		 systems and diverse clinical modalities. Deliver comprehensive clinical decision-support, detailed medical rationales, and robust,
+		 safe, actionable health insights.`,
 		parse: Parsers.none,
 	},
 	"medix-r1-30b": {
@@ -120,6 +135,12 @@ const MODEL_REGISTRY: ModelRegistry = {
 				"User:",
 			],
 		},
+		systemPrompt: `You are Medix-R1, an advanced reasoning model optimized for medical tasks. You must approach queries with a 
+		thorough, step-by-step clinical mindset. 
+
+            CRITICAL INSTRUCTION: Place your entire internal clinical reasoning, differential diagnosis formulation, and evaluation of 
+			medical evidence exclusively inside <think> and </thought> tags. 
+            Once you close the </thought> tag, immediately follow it with your final, structured, and user-facing medical advice or response.`,
 		parse: (text) => Parsers.tags(text, "<think>", "</thought>"),
 	},
 }
