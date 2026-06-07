@@ -34,22 +34,16 @@ const MODEL_REGISTRY: ModelRegistry = {
 		alias: "medgemma-1.5-4b",
 		options: {
 			stop: [
-				"<|im_start|>user",
-				"<|im_start|>system",
-				"<|im_end|>",
 				"<end_of_turn>",
+				"<start_of_turn>",
+				"<eos>",
+				"user\n",
+				"model\n",
 			],
 		},
-		systemPrompt: `You are MedGemma. You must separate your thinking process from your final response using XML tags.   
-            Do not output anything outside of these tags.
-
-            Format your output exactly like this:
-            <thinking>
-            [Your internal reasoning goes here]
-            </thinking>
-            <response>
-            [Your final answer goes here]
-            </response>`,
+		systemPrompt: `You are MedGemma. You must separate your thinking process from your final response using XML tags. Do not 
+			output anything outside of these tags.\n\nFormat your output exactly like this:\n<thinking>\n[Your internal 
+				reasoning goes here]\n</thinking>\n<response>\n[Your final answer goes here]\n</response>`,
 		parse: Parsers.medgemma15,
 	},
 	"medgemma-1.0-4b": {
